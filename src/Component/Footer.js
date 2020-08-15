@@ -1,9 +1,9 @@
 import React from 'react';
-import { AppBar, withStyles } from '@material-ui/core';
+import { AppBar, withStyles,Toolbar, Button } from '@material-ui/core';
 
 const style = theme => ({
     footerBar: {
-        backgroundColor: '#343434',
+        backgroundColor: 'blue',
         top: 'auto',
         bottom: 0,
         right: 0,
@@ -18,12 +18,15 @@ function Footer(props) {
     return (
         <>
             <AppBar className={classes.footerBar} position="fixed">
-                {/* <Toolbar style={{ marginLeft: '45%', fontStyle: "normal",color:'#6c757d!important'}}>
-                   { `Desgin & Developed by Prashant Singh`}
-                </Toolbar> */}
-                <p style={{ marginLeft: '45%',color:'white',fontStyle:'x-large'}}>{ `@Desgin & Developed by Prashant Singh`}</p>
-                {/* <h6 style={{ marginLeft: '45%',color:'cyan',fontStyle:'x-large'}}>{ `@Desgin & Developed by Prashant Singh`}</h6> */}
+             <Toolbar>
+             {props.children}
+             <Button style={{ backgroundColor:'black',color:'red'}}>Back</Button>
+             </Toolbar>
+            
+                {/* <p style={{ marginLeft: '45%',color:'white',fontStyle:'x-large'}}>{ `@Desgin & Developed by Prashant and Team`}</p> */}
+               
             </AppBar>
+
 
 
         </>

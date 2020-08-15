@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardActions, CardContent, Typography, withStyles } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
     Card1: {
@@ -10,7 +11,7 @@ const styles = theme => ({
         //margin: '0 2px',
         transform: 'scale(0.8)',
         backgroundColor: '#808000',
-        borderColor:'#808000'
+        borderColor: '#808000'
     },
     Card2: {
         minWidth: '312px',
@@ -20,7 +21,7 @@ const styles = theme => ({
         //margin: '0 2px',
         transform: 'scale(0.8)',
         backgroundColor: '#db4437',
-        borderColor:'#db4437'
+        borderColor: '#db4437'
     },
     Card3: {
         minWidth: '312px',
@@ -30,8 +31,8 @@ const styles = theme => ({
         //margin: '0 2px',
         transform: 'scale(0.8)',
         backgroundColor: '#673ab7',
-        borderColor:'#673ab7'
-      
+        borderColor: '#673ab7'
+
     },
     Card4: {
         minWidth: '312px',
@@ -41,7 +42,7 @@ const styles = theme => ({
         //margin: '0 2px',
         transform: 'scale(0.8)',
         backgroundColor: '#e91e63',
-        borderColor:'#e91e63'
+        borderColor: '#e91e63'
     },
     Card5: {
         minWidth: '312px',
@@ -51,7 +52,7 @@ const styles = theme => ({
         //margin: '0 2px',
         transform: 'scale(0.8)',
         backgroundColor: '#008080',
-        borderColor:'#008080'
+        borderColor: '#008080'
     },
     cardTitle1: {
         marginTop: '10%',
@@ -59,32 +60,36 @@ const styles = theme => ({
         fontSize: 'larger',
         color: '#fff!important'
     }
-    
+
 })
 
 class CardListComponent extends Component {
 
-        constructor(props){
-            super(props);
-            this.state={
-                cardList:[{title:'Deployment Report'},{title:'Application Report'},{title:'CodeReview Report'}]
-            }
+    constructor(props) {
+        super(props);
+        this.state = {
+            cardList: [{ title: 'Deployment Report' }, { title: 'Application Report' }, { title: 'CodeReview Report' }]
         }
+    }
 
     render() {
         const { classes } = this.props;
 
         return (
             <>
-                <Card className={classes.Card1}>
-                    <CardContent>
-                        <Typography className={classes.cardTitle1}>
-                            Deployment Report
+                <Link to='/deployment'>
+                    <Card className={classes.Card1}>
+                        <CardContent>
+                            <Typography className={classes.cardTitle1}>
+                                Deployment Report
                     </Typography>
-                    </CardContent>
-                    <CardActions>
-                    </CardActions>
-                </Card>
+                        </CardContent>
+                        <CardActions>
+                        </CardActions>
+                    </Card>
+                </Link>
+
+                <Link to="/codereview">
                 <Card className={classes.Card2}>
                     <CardContent>
                         <Typography className={classes.cardTitle1}>
@@ -94,6 +99,8 @@ class CardListComponent extends Component {
                     <CardActions>
                     </CardActions>
                 </Card>
+                </Link>
+                <Link to="/dsmreport">
                 <Card className={classes.Card3}>
                     <CardContent>
                         <Typography className={classes.cardTitle1}>
@@ -103,6 +110,8 @@ class CardListComponent extends Component {
                     <CardActions>
                     </CardActions>
                 </Card>
+                </Link>
+                <Link to="/screport">
                 <Card className={classes.Card4}>
                     <CardContent>
                         <Typography className={classes.cardTitle1}>
@@ -112,6 +121,8 @@ class CardListComponent extends Component {
                     <CardActions>
                     </CardActions>
                 </Card>
+                </Link>
+                <Link to="/marcomreport">
                 <Card className={classes.Card5}>
                     <CardContent>
                         <Typography className={classes.cardTitle1}>
@@ -121,6 +132,7 @@ class CardListComponent extends Component {
                     <CardActions>
                     </CardActions>
                 </Card>
+                </Link>
             </>
         )
     }
