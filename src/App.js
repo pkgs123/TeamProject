@@ -13,8 +13,6 @@ import history from './History';
 function App(props){
 return(
     <>
-   <AppBar/>
-   {/* <Footer/> */}
    <HashRouter history={history}>
        <Route path="/" component={CardList} exact>
        </Route>

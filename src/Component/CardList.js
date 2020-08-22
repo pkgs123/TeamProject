@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Card, CardActions, CardContent, Typography, withStyles } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-
+import AppBar from './AppBar';
+import logo from '../Images/jio.png';
 const styles = theme => ({
     Card1: {
         minWidth: '312px',
@@ -77,6 +78,9 @@ class CardListComponent extends Component {
 
         return (
             <>
+                <AppBar>
+                    <img alt="" src={logo} width="30" height="30"></img><h4 style={{ marginLeft: '1%', fontStyle: "normal" }}>OneJio Team Dashboard</h4>
+                </AppBar>
                 <Link to='/deployment'>
                     <Card className={classes.Card1}>
                         <CardContent>
@@ -90,48 +94,48 @@ class CardListComponent extends Component {
                 </Link>
 
                 <Link to="/codereview">
-                <Card className={classes.Card2}>
-                    <CardContent>
-                        <Typography className={classes.cardTitle1}>
-                            CodeReview Report
+                    <Card className={classes.Card2}>
+                        <CardContent>
+                            <Typography className={classes.cardTitle1}>
+                                CodeReview Report
                     </Typography>
-                    </CardContent>
-                    <CardActions>
-                    </CardActions>
-                </Card>
+                        </CardContent>
+                        <CardActions>
+                        </CardActions>
+                    </Card>
                 </Link>
                 <Link to="/dsmreport">
-                <Card className={classes.Card3}>
-                    <CardContent>
-                        <Typography className={classes.cardTitle1}>
-                            DSM Report
+                    <Card className={classes.Card3}>
+                        <CardContent>
+                            <Typography className={classes.cardTitle1}>
+                                DSM Report
                     </Typography>
-                    </CardContent>
-                    <CardActions>
-                    </CardActions>
-                </Card>
+                        </CardContent>
+                        <CardActions>
+                        </CardActions>
+                    </Card>
                 </Link>
                 <Link to="/screport">
-                <Card className={classes.Card4}>
-                    <CardContent>
-                        <Typography className={classes.cardTitle1}>
-                            SCM Report
+                    <Card className={classes.Card4}>
+                        <CardContent>
+                            <Typography className={classes.cardTitle1}>
+                                SCM Report
                     </Typography>
-                    </CardContent>
-                    <CardActions>
-                    </CardActions>
-                </Card>
+                        </CardContent>
+                        <CardActions>
+                        </CardActions>
+                    </Card>
                 </Link>
                 <Link to="/marcomreport">
-                <Card className={classes.Card5}>
-                    <CardContent>
-                        <Typography className={classes.cardTitle1}>
-                            MARCOM Report
+                    <Card className={classes.Card5}>
+                        <CardContent>
+                            <Typography className={classes.cardTitle1}>
+                                MARCOM Report
                     </Typography>
-                    </CardContent>
-                    <CardActions>
-                    </CardActions>
-                </Card>
+                        </CardContent>
+                        <CardActions>
+                        </CardActions>
+                    </Card>
                 </Link>
             </>
         )

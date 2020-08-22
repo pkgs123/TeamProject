@@ -1,9 +1,9 @@
 import React from 'react';
 import { AppBar, withStyles,Toolbar, Button } from '@material-ui/core';
-
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 const style = theme => ({
     footerBar: {
-        backgroundColor: 'blue',
+        backgroundColor: '#343434',
         top: 'auto',
         bottom: 0,
         right: 0,
@@ -20,9 +20,9 @@ function Footer(props) {
             <AppBar className={classes.footerBar} position="fixed">
              <Toolbar>
              {props.children}
-             <Button style={{ backgroundColor:'black',color:'red'}}>Back</Button>
+            {/* <ArrowBackIcon style={{color:'naviblue',fontSize:'xx-large',marginLeft:'97%'}}></ArrowBackIcon> */}
+             {/* <Button style={{ backgroundColor:'white',borderColor:'red',color:'black'}}>Back</Button> */}
              </Toolbar>
-            
                 {/* <p style={{ marginLeft: '45%',color:'white',fontStyle:'x-large'}}>{ `@Desgin & Developed by Prashant and Team`}</p> */}
                
             </AppBar>
