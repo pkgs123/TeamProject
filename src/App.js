@@ -1,7 +1,4 @@
 import React from 'react';
-import {Grid} from '@material-ui/core';
-import AppBar from './Component/AppBar';
-import Footer from './Component/Footer';
 import CardList from './Component/CardList';
 import {HashRouter,Route} from 'react-router-dom';
 import Deployment from './Component/DeploymentReport';

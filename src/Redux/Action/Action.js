@@ -25,4 +25,18 @@ const getDeploymentRecords = () => {
 
     }
 
-    export {getDeploymentRecords,postNewDeploymentRecords}
+   const deploymentRowTable = (...args) =>{
+
+       return async (dispatch)=>{
+
+        dispatch({
+            type: 'EDIT_DEPLOYMENT_RECORD',
+            payload:{
+                index:args[0],
+                edit:args[1]
+            }
+        })
+       }
+   }
+
+    export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable}

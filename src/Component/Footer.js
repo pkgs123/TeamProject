@@ -1,6 +1,5 @@
 import React from 'react';
-import { AppBar, withStyles,Toolbar, Button } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { AppBar, withStyles,Toolbar} from '@material-ui/core';
 const style = theme => ({
     footerBar: {
         backgroundColor: '#343434',
