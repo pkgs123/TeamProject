@@ -18,6 +18,7 @@ import logo from '../Images/jio.png';
 import createIcon from '../Images/createIcon.png';
 import EditIcon from '@material-ui/icons/Edit';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import Graph from '../Reusable/Graph';
 const onNavBack = () => {
     history.push('/');
 }
@@ -245,6 +246,9 @@ function DeploymentReport(props) {
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
+            </Paper>
+            <Paper>
+                <Graph/>
             </Paper>
             {/* <Footer>
 
