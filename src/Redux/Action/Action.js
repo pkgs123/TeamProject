@@ -48,4 +48,17 @@ const getDeploymentRecords = () => {
 
        }
    }
-    export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable,deploymentCreateRecords}
+
+   const confirmDialogValue = (...args) =>{
+       return async (dispatch)=>{
+           dispatch({
+               type:'CONFIRM_DIALOG_SETTING',
+               payload:{
+                   rowDeleteIndex:args[0],
+                   dialogOpenValue:args[1]
+               }
+           })
+       }
+   }
+    export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable,
+        deploymentCreateRecords,confirmDialogValue}

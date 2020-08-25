@@ -10,7 +10,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import history from '../History';
 import { connect } from 'react-redux';
 
-import { getDeploymentRecords, deploymentRowTable, deploymentCreateRecords } from '../Redux/Action/Action';
+import { getDeploymentRecords, deploymentRowTable, deploymentCreateRecords,confirmDialogValue } from '../Redux/Action/Action';
 
 import AppBar from './AppBar';
 
@@ -18,6 +18,7 @@ import logo from '../Images/jio.png';
 import createIcon from '../Images/createIcon.png';
 import EditIcon from '@material-ui/icons/Edit';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import ConfirmationDialog from '../Reusable/ConfirmationBox';
 const onNavBack = () => {
     history.push('/');
 }
@@ -32,6 +33,7 @@ function DeploymentReport(props) {
 
     const [edit, setEdit] = useState(false);
     const [create,setCreate] = useState(true);
+ 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -51,10 +53,9 @@ function DeploymentReport(props) {
     }
     const handleDelete = (ind) => {
         debugger;
-       
-       deploymentResult.splice(ind,1);
-       
-        setCreate(!create)
+        props.confirmDialogValue(ind,true);
+     //  deploymentResult.splice(ind,1);
+       setCreate(!create)
         
     }
     const createNewRecord = () =>{
@@ -248,7 +249,6 @@ function DeploymentReport(props) {
                                                 <Tooltip title="Cancel" placement="left-start">
                                                 <HighlightOffIcon style={{marginRight:'5%',color:'red'}} onClick={() => handleDelete((page * rowsPerPage) + ind)}></HighlightOffIcon>
                                                 </Tooltip> 
-                                                   
                                                   </Box>
                                             </TableCell>
                                         </TableRow>
@@ -267,10 +267,12 @@ function DeploymentReport(props) {
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
+              
             </Paper>
             {/* <Footer>
-
+ 
             </Footer> */}
+              <ConfirmationDialog />
         </>
     )
 }
@@ -281,7 +283,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-    getDeploymentRecords, deploymentRowTable,deploymentCreateRecords
+    getDeploymentRecords, deploymentRowTable,
+    deploymentCreateRecords,confirmDialogValue
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeploymentReport);

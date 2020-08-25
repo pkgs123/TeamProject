@@ -1,6 +1,6 @@
 let initialState = {
-    deploymentRecords :[]
-
+    deploymentRecords :[],
+    confirmDialogOptions:{}
 }
 
 const findDeploymentRecords = (state, action) => {
@@ -34,7 +34,12 @@ const createEmptyDeploymentRecord = (state,action) =>{
 
     }
 }
-
+const setConfirmDialogValue = (state,action) =>{
+    return{
+        ...state,
+        confirmDialogOptions:action.payload
+    }
+}
 
 const deployment = (state = initialState, action) => {
     switch (action.type) {
@@ -44,6 +49,8 @@ const deployment = (state = initialState, action) => {
             return setDeploymentRecordValue(state,action);
         case 'CREATE_DEPLOYMENT_RECORD':
             return createEmptyDeploymentRecord(state,action);
+        case 'CONFIRM_DIALOG_SETTING':
+              return setConfirmDialogValue(state,action);
         default: return state;
     }
 }
