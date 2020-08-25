@@ -10,7 +10,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import history from '../History';
 import { connect } from 'react-redux';
 
-import { getDeploymentRecords, deploymentRowTable } from '../Redux/Action/Action';
+import { getDeploymentRecords, deploymentRowTable, deploymentCreateRecords } from '../Redux/Action/Action';
 
 import AppBar from './AppBar';
 
@@ -31,6 +31,7 @@ function DeploymentReport(props) {
     const [compName, setComponentName] = useState('Deployment Report');
 
     const [edit, setEdit] = useState(false);
+    const [create,setCreate] = useState(true);
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -50,9 +51,25 @@ function DeploymentReport(props) {
     }
     const handleDelete = (ind) => {
         debugger;
+       
+       deploymentResult.splice(ind,1);
+       
+        setCreate(!create)
+        
     }
     const createNewRecord = () =>{
-        debugger;
+
+        let emptyRowObj={
+            AppName:'',Feature:'',FeatureStatus:'',UserStoryId:null,UserStoryStatus:'',TaskId:null,
+            TaskIdStatus:'',Functional:'',Developer:'',overAllStatus:'',ReleaseNumber:null,NatureOfChange:'',
+            UiArtifacts:null,ApiArtifacts:null,edit:true
+        }
+        props.deploymentCreateRecords(emptyRowObj);
+        setCreate(!create)
+    }
+    const handleSaveRecord =(ind) =>{
+        props.deploymentRowTable(ind, false);
+        setCreate(!create)
     }
     useEffect(() => {
         props.getDeploymentRecords();
@@ -104,7 +121,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell >
                                                 {
-                                                    data.edit ? <TextField value={data.AppName} onChange={handleAppNameChange}>
+                                                    data.edit ? <TextField value={data.AppName} onChange={handleAppNameChange} placeholder="AppName">
                                                     </TextField>
                                                         :
                                                         data.AppName
@@ -112,7 +129,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.Feature} >
+                                                    data.edit ? <TextField value={data.Feature} placeholder="Feature">
                                                     </TextField>
                                                         :
                                                         data.Feature
@@ -120,7 +137,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.Feature} >
+                                                    data.edit ? <TextField value={data.Feature} placeholder="FeatureStatus" >
                                                     </TextField>
                                                         :
                                                         data.FeatureStatus
@@ -129,7 +146,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.UserStoryId} >
+                                                    data.edit ? <TextField value={data.UserStoryId} placeholder="UserStoryId">
                                                     </TextField>
                                                         :
                                                         data.UserStoryId
@@ -137,7 +154,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.UserStoryStatus} >
+                                                    data.edit ? <TextField value={data.UserStoryStatus} placeholder="UserStoryStatus">
                                                     </TextField>
                                                         :
                                                         data.UserStoryStatus
@@ -145,7 +162,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.TaskId} >
+                                                    data.edit ? <TextField value={data.TaskId} placeholder="TaskId">
                                                     </TextField>
                                                         :
                                                         data.TaskId
@@ -153,7 +170,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.TaskIdStatus} >
+                                                    data.edit ? <TextField value={data.TaskIdStatus} placeholder="TaskIdStatus">
                                                     </TextField>
                                                         :
                                                         data.TaskIdStatus
@@ -161,7 +178,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.Functional} >
+                                                    data.edit ? <TextField value={data.Functional} placeholder="Functional">
                                                     </TextField>
                                                         :
                                                         data.Functional
@@ -169,7 +186,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.Developer} >
+                                                    data.edit ? <TextField value={data.Developer} placeholder="Developer">
                                                     </TextField>
                                                         :
                                                         data.Developer
@@ -177,7 +194,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.overAllStatus} >
+                                                    data.edit ? <TextField value={data.overAllStatus} placeholder="overAllStatus">
                                                     </TextField>
                                                         :
                                                         data.overAllStatus
@@ -185,7 +202,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.ReleaseNumber} >
+                                                    data.edit ? <TextField value={data.ReleaseNumber} placeholder="ReleaseNumber">
                                                     </TextField>
                                                         :
                                                         data.ReleaseNumber
@@ -193,7 +210,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.NatureOfChange} >
+                                                    data.edit ? <TextField value={data.NatureOfChange} placeholder="NatureOfChange">
                                                     </TextField>
                                                         :
                                                         data.NatureOfChange
@@ -201,7 +218,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.UiArtifacts} >
+                                                    data.edit ? <TextField value={data.UiArtifacts} placeholder="UiArtifacts">
                                                     </TextField>
                                                         :
                                                         data.UiArtifacts
@@ -209,7 +226,7 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.ApiArtifacts} >
+                                                    data.edit ? <TextField value={data.ApiArtifacts} placeholder="ApiArtifacts">
                                                     </TextField>
                                                         :
                                                         data.ApiArtifacts
@@ -217,16 +234,21 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 <Box display="flex" flexDirection="row">
+                                               
+                                               {create && 
                                                 <Tooltip title="Edit" placement="left-start">
-                                                <EditIcon style={{marginRight:'5%',color:'limegreen'}}
+                                               <EditIcon style={{marginRight:'10%',color:'limegreen'}}
                                                     onClick={() => handleEdit((page * rowsPerPage) + ind)}></EditIcon>
-                                                  </Tooltip>
-                                                  <Tooltip title="Cancel" placement="left-start">
+                                                    </Tooltip>
+                                                   }
+                                                <Tooltip title="Save" placement="left-start">
+                                                <SaveIcon style={{color:'darkorchid',marginRight:'10%'}} onClick={()=>handleSaveRecord((page * rowsPerPage) + ind)}/>
+                                                </Tooltip>
+
+                                                <Tooltip title="Cancel" placement="left-start">
                                                 <HighlightOffIcon style={{marginRight:'5%',color:'red'}} onClick={() => handleDelete((page * rowsPerPage) + ind)}></HighlightOffIcon>
                                                 </Tooltip> 
-                                                <Tooltip title="Save" placement="left-start">
-                                                <SaveIcon style={{color:'darkorchid'}}/>
-                                                </Tooltip>
+                                                   
                                                   </Box>
                                             </TableCell>
                                         </TableRow>
@@ -259,7 +281,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-    getDeploymentRecords, deploymentRowTable
+    getDeploymentRecords, deploymentRowTable,deploymentCreateRecords
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeploymentReport);

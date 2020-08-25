@@ -39,4 +39,13 @@ const getDeploymentRecords = () => {
        }
    }
 
-    export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable}
+   const deploymentCreateRecords = (...args) =>{
+       return async (dispatch)=>{
+           dispatch({
+            type:'CREATE_DEPLOYMENT_RECORD',
+            payload:args[0]
+           })
+
+       }
+   }
+    export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable,deploymentCreateRecords}
