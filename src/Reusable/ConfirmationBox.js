@@ -17,11 +17,10 @@ const handleCloseOk = () =>{
    deploymentResult.splice(confirmDialogResult.rowDeleteIndex,1);
    props.confirmDialogValue(0,false);
    //props.getDeploymentRecords();
-  // setOpen(false);
+  setOpen(false);
 }
 useEffect(()=>{
-    deploymentResult.splice(confirmDialogResult.rowDeleteIndex,1);
-    setOpen(false);
+ 
 },[])
 
     return(

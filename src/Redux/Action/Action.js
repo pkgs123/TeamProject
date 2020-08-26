@@ -1,10 +1,10 @@
 import {get,post} from '../../lib/api';
-import {OneJio_Login} from '../../configConstant/config';
+import {OneJio_Get_Deployment,OneJio_Post_Deployment} from '../../configConstant/config';
 
 const getDeploymentRecords = () => {
 
     return async (dispatch) => {
-        let url = OneJio_Login;
+        let url = OneJio_Get_Deployment;
         let response = await get(url);
         dispatch({
             type: 'GET_DEPLOYMENT',
@@ -13,16 +13,28 @@ const getDeploymentRecords = () => {
     }
 }
 
- const postNewDeploymentRecords = (url) => {
-     let payload = {};
+ const postNewDeploymentRecords = (payload) => {
+     
+     let url = OneJio_Post_Deployment;
+     let response;
+
     return async (dispatch)=>{
-        let response = await post(url,payload)
+        try{
+             response = await post(url,payload);
+            console.log("postResponse",response);
+            dispatch({
+                type: 'POST_DEPLOYMENT',
+                payload: response
+            })
+        }
+        catch(error){
+            console.log("error",error);
         dispatch({
             type: 'POST_DEPLOYMENT',
-                payload: response
+            payload:error
         })
     }
-
+    }
     }
 
    const deploymentRowTable = (...args) =>{
