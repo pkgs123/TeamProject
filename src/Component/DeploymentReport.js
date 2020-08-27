@@ -10,7 +10,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import history from '../History';
 import { connect } from 'react-redux';
 
-import { getDeploymentRecords, deploymentRowTable, deploymentCreateRecords,confirmDialogValue,postNewDeploymentRecords } from '../Redux/Action/Action';
+import { getDeploymentRecords, deploymentRowTable, deploymentCreateRecords,confirmDialogValue,postNewDeploymentRecords,successErrorDialog } from '../Redux/Action/Action';
 
 import AppBar from './AppBar';
 
@@ -60,7 +60,7 @@ function DeploymentReport(props) {
     };
     const handleAppNameChange = (ind,data,option) => {
         debugger;
-        setAppNameValue(data['AppName'] = option.target.value);
+        setAppNameValue(data['AppName'] = option.target.value.toUpperCase());
         //setFeatureValue(data['Feature'] = option.target.value)
     }
 
@@ -72,7 +72,7 @@ function DeploymentReport(props) {
 
     const handleFeatureStatus = (ind,data,option) => {
         debugger;
-        setFeatureStatus(data['FeatureStatus'] = option.target.value)
+        setFeatureStatus(data['FeatureStatus'] = option.target.value.toUpperCase())
     }
     const handleUserStoryId = (ind,data,option) => {
         debugger;
@@ -80,7 +80,7 @@ function DeploymentReport(props) {
     }
     const handleUserStoryStatus = (ind,data,option) => {
         debugger;
-        setUserStoryStatus(data['UserStoryStatus'] = option.target.value)
+        setUserStoryStatus(data['UserStoryStatus'] = option.target.value.toUpperCase())
     }
     const handleTaskId = (ind,data,option) => {
         debugger;
@@ -88,7 +88,7 @@ function DeploymentReport(props) {
     }
     const handleTaskIdStatus = (ind,data,option) => {
         debugger;
-        setTaskIdStatus(data['TaskIdStatus'] = option.target.value)
+        setTaskIdStatus(data['TaskIdStatus'] = option.target.value.toUpperCase())
     }
     const handleFunctional = (ind,data,option) => {
         debugger;
@@ -104,7 +104,7 @@ function DeploymentReport(props) {
     }
     const handleReleaseNumber = (ind,data,option) => {
         debugger;
-        setReleaseNumber(data['ReleaseNumber'] = option.target.value)
+        setReleaseNumber(data['ReleaseNumber'] = option.target.value.toUpperCase())
     }
     const handleNatureOfChange = (ind,data,option) => {
         debugger;
@@ -129,8 +129,6 @@ function DeploymentReport(props) {
         props.confirmDialogValue(ind,true);
      //  deploymentResult.splice(ind,1);
        setCreate(!create)
-      
-        
     }
     const createNewRecord = () =>{
 
@@ -162,6 +160,7 @@ function DeploymentReport(props) {
         };
         props.postNewDeploymentRecords(payload);
         props.deploymentRowTable(ind, false);
+        props.successErrorDialog(true);
         setCreate(!create)
     }
     useEffect(() => {
@@ -416,9 +415,6 @@ function DeploymentReport(props) {
                 />
               
             </Paper>
-            {/* <Footer>
- 
-            </Footer> */}
               <ConfirmationDialog />
              <SuccessErrorDialog/>
         </>
@@ -432,7 +428,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
     getDeploymentRecords, deploymentRowTable,postNewDeploymentRecords,
-    deploymentCreateRecords,confirmDialogValue
+    deploymentCreateRecords,confirmDialogValue,successErrorDialog
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeploymentReport);

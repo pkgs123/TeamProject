@@ -72,5 +72,14 @@ const getDeploymentRecords = () => {
            })
        }
    }
+
+   const successErrorDialog = (...args) =>{
+       return async (dispatch)=>{
+           dispatch({
+               type:'SUCCESS_ERROR_SETTING',
+               payload:args[0]
+           })
+       }
+   }
     export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable,
-        deploymentCreateRecords,confirmDialogValue}
+        deploymentCreateRecords,confirmDialogValue,successErrorDialog}
