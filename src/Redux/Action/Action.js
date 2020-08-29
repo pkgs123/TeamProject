@@ -1,10 +1,10 @@
 import {get,post} from '../../lib/api';
-import {OneJio_Login} from '../../configConstant/config';
+import {OneJio_Get_Deployment,OneJio_Post_Deployment} from '../../configConstant/config';
 
 const getDeploymentRecords = () => {
 
     return async (dispatch) => {
-        let url = OneJio_Login;
+        let url = OneJio_Get_Deployment;
         let response = await get(url);
         dispatch({
             type: 'GET_DEPLOYMENT',
@@ -13,16 +13,28 @@ const getDeploymentRecords = () => {
     }
 }
 
- const postNewDeploymentRecords = (url) => {
-     let payload = {};
+ const postNewDeploymentRecords = (payload) => {
+     
+     let url = OneJio_Post_Deployment;
+     let response;
+
     return async (dispatch)=>{
-        let response = await post(url,payload)
+        try{
+             response = await post(url,payload);
+            console.log("postResponse",response);
+            dispatch({
+                type: 'POST_DEPLOYMENT',
+                payload: response
+            })
+        }
+        catch(error){
+            console.log("error",error);
         dispatch({
             type: 'POST_DEPLOYMENT',
-                payload: response
+            payload:error
         })
     }
-
+    }
     }
 
    const deploymentRowTable = (...args) =>{
@@ -39,4 +51,35 @@ const getDeploymentRecords = () => {
        }
    }
 
-    export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable}
+   const deploymentCreateRecords = (...args) =>{
+       return async (dispatch)=>{
+           dispatch({
+            type:'CREATE_DEPLOYMENT_RECORD',
+            payload:args[0]
+           })
+
+       }
+   }
+
+   const confirmDialogValue = (...args) =>{
+       return async (dispatch)=>{
+           dispatch({
+               type:'CONFIRM_DIALOG_SETTING',
+               payload:{
+                   rowDeleteIndex:args[0],
+                   dialogOpenValue:args[1]
+               }
+           })
+       }
+   }
+
+   const successErrorDialog = (...args) =>{
+       return async (dispatch)=>{
+           dispatch({
+               type:'SUCCESS_ERROR_SETTING',
+               payload:args[0]
+           })
+       }
+   }
+    export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable,
+        deploymentCreateRecords,confirmDialogValue,successErrorDialog}

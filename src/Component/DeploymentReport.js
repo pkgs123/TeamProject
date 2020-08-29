@@ -10,7 +10,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import history from '../History';
 import { connect } from 'react-redux';
 
-import { getDeploymentRecords, deploymentRowTable } from '../Redux/Action/Action';
+import { getDeploymentRecords, deploymentRowTable, deploymentCreateRecords,confirmDialogValue,postNewDeploymentRecords,successErrorDialog } from '../Redux/Action/Action';
 
 import AppBar from './AppBar';
 
@@ -19,8 +19,16 @@ import createIcon from '../Images/createIcon.png';
 import EditIcon from '@material-ui/icons/Edit';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Graph from '../Reusable/Graph';
+import ConfirmationDialog from '../Reusable/ConfirmationBox';
+import SuccessErrorDialog from '../Reusable/SuccessDialog';
+import { indigo } from '@material-ui/core/colors';
+
 const onNavBack = () => {
     history.push('/');
+}
+const body={ 
+    display: "flex",
+    flexDirection: "column"
 }
 
 function DeploymentReport(props) {
@@ -32,18 +40,90 @@ function DeploymentReport(props) {
     const [compName, setComponentName] = useState('Deployment Report');
 
     const [edit, setEdit] = useState(false);
+    const [create,setCreate] = useState(true);
+    const [appNameValue,setAppNameValue] = useState('');
+    const [featureValue,setFeatureValue] = useState(0);
+    const [featureStatus,setFeatureStatus] = useState('');
+    const [userStoryId,setUserStoryId] = useState(0);
+    const [userStoryStatus,setUserStoryStatus] = useState('');
+    const [taskId,setTaskId] = useState(0);
+    const [taskIdStatus,setTaskIdStatus] = useState('');
+    const [functional,setFunctional] = useState();
+    const [developer,setDeveloper] = useState('');
+    const [overAllStatus,setOverAllStatus] = useState('');
+    const [releaseNumber,setReleaseNumber] = useState('');
+    const [natureOfChange,setNatureOfChange] = useState('');
+    const [uiArtifact,setUiArtifacts] = useState(0);
+    const [apiArtifact,setApiArtifacts] = useState(0);
+   
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
-
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
-
-    const handleAppNameChange = (event) => {
+    const handleAppNameChange = (ind,data,option) => {
         debugger;
+        setAppNameValue(data['AppName'] = option.target.value.toUpperCase());
+        //setFeatureValue(data['Feature'] = option.target.value)
     }
+
+    const handleFeatureId = (ind,data,option) => {
+        debugger;
+        let featureId = Number(option.target.value);
+        setFeatureValue(data['Feature'] = featureId);
+    }
+
+    const handleFeatureStatus = (ind,data,option) => {
+        debugger;
+        setFeatureStatus(data['FeatureStatus'] = option.target.value.toUpperCase())
+    }
+    const handleUserStoryId = (ind,data,option) => {
+        debugger;
+        setUserStoryId(data['UserStoryId'] = option.target.value)
+    }
+    const handleUserStoryStatus = (ind,data,option) => {
+        debugger;
+        setUserStoryStatus(data['UserStoryStatus'] = option.target.value.toUpperCase())
+    }
+    const handleTaskId = (ind,data,option) => {
+        debugger;
+        setTaskId(data['TaskId'] = option.target.value)
+    }
+    const handleTaskIdStatus = (ind,data,option) => {
+        debugger;
+        setTaskIdStatus(data['TaskIdStatus'] = option.target.value.toUpperCase())
+    }
+    const handleFunctional = (ind,data,option) => {
+        debugger;
+        setFunctional(data['Functional'] = option.target.value)
+    }
+    const handleDeveloper = (ind,data,option) => {
+        debugger;
+        setDeveloper(data['Developer'] = option.target.value)
+    }
+    const handleoverAllStatus = (ind,data,option) => {
+        debugger;
+        setOverAllStatus(data['overAllStatus'] = option.target.value)
+    }
+    const handleReleaseNumber = (ind,data,option) => {
+        debugger;
+        setReleaseNumber(data['ReleaseNumber'] = option.target.value.toUpperCase())
+    }
+    const handleNatureOfChange = (ind,data,option) => {
+        debugger;
+        setNatureOfChange(data['NatureOfChange'] = option.target.value)
+    }
+    const handleUiArtifacts = (ind,data,option) => {
+        debugger;
+        setUiArtifacts(data['UiArtifacts'] = option.target.value)
+    }
+    const handleApiArtifacts = (ind,data,option) => {
+        debugger;
+        setApiArtifacts(data['ApiArtifacts'] = option.target.value)
+    }
+   
     const handleEdit = (ind) => {
         debugger;
         props.deploymentRowTable(ind, true);
@@ -51,15 +131,48 @@ function DeploymentReport(props) {
     }
     const handleDelete = (ind) => {
         debugger;
+        props.confirmDialogValue(ind,true);
+     //  deploymentResult.splice(ind,1);
+       setCreate(!create)
     }
     const createNewRecord = () =>{
-        debugger;
+
+        let emptyRowObj={
+            AppName:'',Feature:'',FeatureStatus:'',UserStoryId:null,UserStoryStatus:'',TaskId:null,
+            TaskIdStatus:'',Functional:'',Developer:'',overAllStatus:'',ReleaseNumber:null,NatureOfChange:'',
+            UiArtifacts:null,ApiArtifacts:null,edit:true
+        }
+        props.deploymentCreateRecords(emptyRowObj);
+        setCreate(!create)
+    }
+    const handleSaveRecord =(ind) =>{
+
+        let payload = {
+            "AppName":appNameValue,
+            "Feature":featureValue,
+            "FeatureStatus":featureStatus,
+            "UserStoryId":userStoryId,
+             "UserStoryStatus":userStoryStatus,
+             "TaskId":taskId,
+             "TaskIdStatus":taskIdStatus,
+             "Functional":functional,
+             "Developer":developer,
+             "overAllStatus":overAllStatus,
+             "ReleaseNumber":releaseNumber,
+             "NatureOfChange":natureOfChange,
+             "UiArtifacts":uiArtifact,
+             "ApiArtifacts":apiArtifact
+        };
+        props.postNewDeploymentRecords(payload);
+        props.deploymentRowTable(ind, false);
+        props.successErrorDialog(true);
+        setCreate(!create)
     }
     useEffect(() => {
         props.getDeploymentRecords();
     }, [])
     return (
-        <>
+        <div style={body}>
             <AppBar>
                 <img alt="" src={logo} width="30" height="30"></img><h4 style={{ marginLeft: '44%', fontStyle: "normal" }}>{compName}</h4>
                 {/* <Button style={{color:"white",backgroundColor:"blueviolet",marginLeft:'40%'}}>Create</Button> */}
@@ -105,7 +218,9 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell >
                                                 {
-                                                    data.edit ? <TextField value={data.AppName} onChange={handleAppNameChange}>
+                                                    data.edit ? <TextField value={data.AppName} onChange={
+                                                       option => handleAppNameChange(ind,data,option)
+                                                    } placeholder="AppName">
                                                     </TextField>
                                                         :
                                                         data.AppName
@@ -113,7 +228,12 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.Feature} >
+                                                    data.edit ? <TextField value={data.Feature} placeholder="Feature"
+                                                    onChange={
+                                                        option => handleFeatureId(ind,data,option)
+                                                     }
+                                                    
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.Feature
@@ -121,7 +241,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.Feature} >
+                                                    data.edit ? <TextField value={data.FeatureStatus} placeholder="FeatureStatus" 
+                                                    onChange={
+                                                        option => handleFeatureStatus(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.FeatureStatus
@@ -130,7 +254,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.UserStoryId} >
+                                                    data.edit ? <TextField value={data.UserStoryId} placeholder="UserStoryId"
+                                                    onChange={
+                                                        option => handleUserStoryId(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.UserStoryId
@@ -138,7 +266,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.UserStoryStatus} >
+                                                    data.edit ? <TextField value={data.UserStoryStatus} placeholder="UserStoryStatus"
+                                                    onChange={
+                                                        option => handleUserStoryStatus(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.UserStoryStatus
@@ -146,7 +278,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.TaskId} >
+                                                    data.edit ? <TextField value={data.TaskId} placeholder="TaskId"
+                                                    onChange={
+                                                        option => handleTaskId(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.TaskId
@@ -154,7 +290,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.TaskIdStatus} >
+                                                    data.edit ? <TextField value={data.TaskIdStatus} placeholder="TaskIdStatus"
+                                                    onChange={
+                                                        option => handleTaskIdStatus(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.TaskIdStatus
@@ -162,7 +302,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.Functional} >
+                                                    data.edit ? <TextField value={data.Functional} placeholder="Functional"
+                                                    onChange={
+                                                        option => handleFunctional(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.Functional
@@ -170,7 +314,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.Developer} >
+                                                    data.edit ? <TextField value={data.Developer} placeholder="Developer"
+                                                    onChange={
+                                                        option => handleDeveloper(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.Developer
@@ -178,7 +326,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.overAllStatus} >
+                                                    data.edit ? <TextField value={data.overAllStatus} placeholder="overAllStatus"
+                                                    onChange={
+                                                        option => handleoverAllStatus(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.overAllStatus
@@ -186,7 +338,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.ReleaseNumber} >
+                                                    data.edit ? <TextField value={data.ReleaseNumber} placeholder="ReleaseNumber"
+                                                    onChange={
+                                                        option => handleReleaseNumber(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.ReleaseNumber
@@ -194,7 +350,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.NatureOfChange} >
+                                                    data.edit ? <TextField value={data.NatureOfChange} placeholder="NatureOfChange"
+                                                    onChange={
+                                                        option => handleNatureOfChange(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.NatureOfChange
@@ -202,7 +362,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.UiArtifacts} >
+                                                    data.edit ? <TextField value={data.UiArtifacts} placeholder="UiArtifacts"
+                                                    onChange={
+                                                        option => handleUiArtifacts(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.UiArtifacts
@@ -210,7 +374,11 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 {
-                                                    data.edit ? <TextField value={data.ApiArtifacts} >
+                                                    data.edit ? <TextField value={data.ApiArtifacts} placeholder="ApiArtifacts"
+                                                    onChange={
+                                                        option => handleApiArtifacts(ind,data,option)
+                                                     }
+                                                    >
                                                     </TextField>
                                                         :
                                                         data.ApiArtifacts
@@ -218,16 +386,20 @@ function DeploymentReport(props) {
                                             </TableCell>
                                             <TableCell>
                                                 <Box display="flex" flexDirection="row">
+                                               
+                                               {create && 
                                                 <Tooltip title="Edit" placement="left-start">
-                                                <EditIcon style={{marginRight:'5%',color:'limegreen'}}
+                                               <EditIcon style={{marginRight:'10%',color:'limegreen'}}
                                                     onClick={() => handleEdit((page * rowsPerPage) + ind)}></EditIcon>
-                                                  </Tooltip>
-                                                  <Tooltip title="Cancel" placement="left-start">
+                                                    </Tooltip>
+                                                   }
+                                                <Tooltip title="Save" placement="left-start">
+                                                <SaveIcon style={{color:'darkorchid',marginRight:'10%'}} onClick={()=>handleSaveRecord((page * rowsPerPage) + ind)}/>
+                                                </Tooltip>
+
+                                                <Tooltip title="Cancel" placement="left-start">
                                                 <HighlightOffIcon style={{marginRight:'5%',color:'red'}} onClick={() => handleDelete((page * rowsPerPage) + ind)}></HighlightOffIcon>
                                                 </Tooltip> 
-                                                <Tooltip title="Save" placement="left-start">
-                                                <SaveIcon style={{color:'darkorchid'}}/>
-                                                </Tooltip>
                                                   </Box>
                                             </TableCell>
                                         </TableRow>
@@ -246,14 +418,17 @@ function DeploymentReport(props) {
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
+              
             </Paper>
-            <Paper>
+            <Paper style={{background:"transparent"}}>
                 <Graph/>
             </Paper>
             {/* <Footer>
 
             </Footer> */}
-        </>
+              <ConfirmationDialog />
+             <SuccessErrorDialog/>
+        </div>
     )
 }
 const mapStateToProps = (state) => {
@@ -263,7 +438,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-    getDeploymentRecords, deploymentRowTable
+    getDeploymentRecords, deploymentRowTable,postNewDeploymentRecords,
+    deploymentCreateRecords,confirmDialogValue,successErrorDialog
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeploymentReport);

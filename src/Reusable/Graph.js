@@ -7,10 +7,6 @@ class Graph extends Component {
         super(props)
         this.state={
             labels : ["SCM", "DSM","FIORI"],
-            // dataset :[{
-            //     data : ["2","4","8"],
-            //     backgroundColor :['#ED90B0','#967BD1','#B9F6CC']
-            // }]
         }
     }
     render() {
@@ -26,7 +22,12 @@ class Graph extends Component {
                     }}
                     height = '50%'
                     options = {{
-                        color : 'white',
+                        legend: {
+                            labels: {
+                                fontColor: "white",
+                                fontSize: 18
+                            }
+                        }
                     }}
                 />
             </div>
