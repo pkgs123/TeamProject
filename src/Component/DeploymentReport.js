@@ -20,6 +20,7 @@ import logo from '../Images/jio.png';
 import createIcon from '../Images/createIcon.png';
 import EditIcon from '@material-ui/icons/Edit';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Graph from '../Reusable/Graph';
 import ConfirmationDialog from '../Reusable/ConfirmationBox';
 import SuccessErrorDialog from '../Reusable/SuccessDialog';
@@ -203,8 +204,8 @@ function DeploymentReport(props) {
             <AppBar>
                 <img alt="" src={logo} width="30" height="30"></img><h4 style={{ marginLeft: '44%', fontStyle: "normal" }}>{compName}</h4>
                 {/* <Button style={{color:"white",backgroundColor:"blueviolet",marginLeft:'40%'}}>Create</Button> */}
-                <Tooltip title="Cancel" placeholder="left-start"> 
-                <CloseIcon style={{ marginLeft: '40%', backgroundColor: 'darksalmon' }} onClick={onNavBack} />
+                <Tooltip title="Back" placeholder="left-start"> 
+                <ArrowBackIcon style={{ marginLeft: '40%', backgroundColor: 'darksalmon' }} onClick={onNavBack} />
                 </Tooltip>
             </AppBar>
             <Paper>
@@ -449,7 +450,7 @@ function DeploymentReport(props) {
             </Paper>
             <br/>
             <Paper style={{background:"transparent",backgroundColor:'lightgray'}}>
-                <b style={{marginLeft:'5%'}}> OverAll Graphical Report:</b><br/>
+                <b style={{marginLeft:'5%',fontFamily: 'monospace',fontSize:'xx-large'}}>Graphical Report:</b><br/>
                 <Graph/>
             </Paper>
               <ConfirmationDialog />
