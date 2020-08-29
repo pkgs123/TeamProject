@@ -122,7 +122,8 @@ function DeploymentReport(props) {
     const handleEdit = (ind) => {
         debugger;
         props.deploymentRowTable(ind, true);
-        setEdit(!edit);
+        setCreate(false);
+       // setEdit(!edit);
     }
     const handleDelete = (ind) => {
         debugger;
@@ -158,10 +159,19 @@ function DeploymentReport(props) {
              "UiArtifacts":uiArtifact,
              "ApiArtifacts":apiArtifact
         };
+        if(payload.AppName || payload.Feature=== 0 || payload.FeatureStatus || payload.UserStoryId===0 || payload.UserStoryStatus || payload.TaskId===0 || payload.TaskIdStatus || payload.Functional || payload.Developer || payload.overAllStatus || payload.ReleaseNumber || payload.NatureOfChange || payload.UiArtifacts===0 || payload.ApiArtifacts===0){
+          props.deploymentRowTable(ind, true);
+          props.postNewDeploymentRecords(payload);
+          props.successErrorDialog(true);
+          setCreate(!create)
+          return;
+          }
         props.postNewDeploymentRecords(payload);
         props.deploymentRowTable(ind, false);
+
         props.successErrorDialog(true);
         setCreate(!create)
+        //setEdit(!edit);
     }
     useEffect(() => {
         props.getDeploymentRecords();
@@ -382,12 +392,12 @@ function DeploymentReport(props) {
                                             <TableCell>
                                                 <Box display="flex" flexDirection="row">
                                                
-                                               {create && 
+                                               {data.UID !== undefined &&
                                                 <Tooltip title="Edit" placement="left-start">
                                                <EditIcon style={{marginRight:'10%',color:'limegreen'}}
                                                     onClick={() => handleEdit((page * rowsPerPage) + ind)}></EditIcon>
                                                     </Tooltip>
-                                                   }
+                                                  }
                                                 <Tooltip title="Save" placement="left-start">
                                                 <SaveIcon style={{color:'darkorchid',marginRight:'10%'}} onClick={()=>handleSaveRecord((page * rowsPerPage) + ind)}/>
                                                 </Tooltip>

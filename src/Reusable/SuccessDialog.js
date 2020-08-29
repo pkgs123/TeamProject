@@ -23,7 +23,7 @@ function SuccessDialog(props) {
 
   let postMsgDisplay='';
 
- if(props.postMessage.status === 201) {
+ if(props.postMessage.status === 201 || props.postMessage.status === 200) {
     postMsgDisplay = [postMessage.data];
     console.log(postMsgDisplay);
   }
