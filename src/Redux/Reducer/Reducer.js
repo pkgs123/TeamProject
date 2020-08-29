@@ -3,7 +3,8 @@ let initialState = {
     confirmDialogOptions:{},
     deploymentPostResponse:[],
     successErrorDialogValue:false,
-    updateResponse:[]
+    updateResponse:[],
+    deleteResponse:[]
 }
 
 const findDeploymentRecords = (state, action) => {
@@ -45,7 +46,12 @@ const setUpdateResponse = (state,action) =>{
         updateResponse:action.payload
     }
 }
-
+const setDeleteResponse =(state,action)=>{
+    return{
+        ...state,
+        deleteResponse:action.payload
+    }
+}
 const setConfirmDialogValue = (state,action) =>{
     return{
         ...state,
@@ -80,6 +86,8 @@ const deployment = (state = initialState, action) => {
               return setSuccessErrorDialogValue(state,action);
         case 'UPDATE_DEPLOYMENT':
               return setUpdateResponse(state,action);
+        case 'DELETE_DEPLOYMENT':
+              return setDeleteResponse(state,action);
         default: return state;
     }
 }

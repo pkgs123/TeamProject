@@ -172,20 +172,23 @@ function DeploymentReport(props) {
         //   }
 
         //Update Functionality
-          if(deploymentResult[ind].edit){
+
+            if(deploymentResult[ind].createIndicator === true){
+                props.postNewDeploymentRecords(payload);
+                props.deploymentRowTable(ind, false);
+               // props.getDeploymentRecords();
+                props.successErrorDialog(true);
+                setCreate(!create);
+                return;
+            }
+
+           if(deploymentResult[ind].edit){
              props.updateDeploymentRecord(deploymentResult[ind]);
              props.deploymentRowTable(ind, false);
              props.successErrorDialog(true);
             setCreate(!create);
             return
            }
-          
-        props.postNewDeploymentRecords(payload);
-        props.deploymentRowTable(ind, false);
-       // props.getDeploymentRecords();
-        props.successErrorDialog(true);
-        setCreate(!create);
-        // setEdit(!edit);
     }
     useEffect(() => {
         props.getDeploymentRecords();
@@ -453,7 +456,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
     getDeploymentRecords, deploymentRowTable,postNewDeploymentRecords,
-    deploymentCreateRecords,confirmDialogValue,successErrorDialog,updateDeploymentRecord
+    deploymentCreateRecords,confirmDialogValue,
+    successErrorDialog,updateDeploymentRecord
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeploymentReport);

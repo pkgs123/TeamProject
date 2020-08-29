@@ -27,3 +27,7 @@ export async function post(url, payload) {
 export async function put(url, payload) {
     return apiCall(url, 'PUT', payload);
 }
+
+export async function remove(url, payload) {
+    return apiCall(url, 'DELETE', payload);
+}

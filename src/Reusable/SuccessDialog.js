@@ -19,19 +19,24 @@ const useStyles = makeStyles((theme) => ({
 function SuccessDialog(props) {
   debugger;
   const classes = useStyles();
-  const { postMessage, successErrorDialogOpen,updateResponseResult } = props;
+  const { postMessage, successErrorDialogOpen,updateResponseResult,deleteResponseResult} = props;
   console.log("updateResponseResult",updateResponseResult);
   let postMsgDisplay='';
 
- if(props.postMessage.status === 201 || props.updateResponseResult.status === 200) {
+ if(props.postMessage.status === 201 || props.updateResponseResult.status === 200 || props.deleteResponseResult.status === 200) {
    if(postMessage.length !== 0){
     postMsgDisplay = [postMessage.data];
     console.log(postMsgDisplay);
    }
-   else if(updateResponseResult!==undefined){
+   else if(updateResponseResult.length !== 0){
     postMsgDisplay = [updateResponseResult.data];
     console.log(postMsgDisplay);
    }
+   else if(deleteResponseResult.length!== 0){
+    postMsgDisplay = [deleteResponseResult.data];
+    console.log(postMsgDisplay);
+   }
+
    
   }
   else if((postMessage.length === undefined) && (props.postMessage.response.status === 400)) {
@@ -65,7 +70,8 @@ const mapStateToProps = state => {
   return {
     postMessage: state.Reducer.deploymentPostResponse,
     successErrorDialogOpen: state.Reducer.successErrorDialogValue,
-    updateResponseResult: state.Reducer.updateResponse
+    updateResponseResult: state.Reducer.updateResponse,
+    deleteResponseResult: state.Reducer.deleteResponse
   }
 }
 

@@ -4,20 +4,26 @@ import Draggable from 'react-draggable';
 import CheckIcon from '@material-ui/icons/Check';
 import BackspaceIcon from '@material-ui/icons/Backspace';
 import{ Dialog, DialogTitle, DialogContent, DialogContentText,DialogActions,Button,Grid, Box, Tooltip } from '@material-ui/core';
-import {getDeploymentRecords,confirmDialogValue} from '../Redux/Action/Action'
+import {getDeploymentRecords,confirmDialogValue,deleteDeploymentRecord,successErrorDialog} from '../Redux/Action/Action'
 function ConfirmationBox(props){
 const {deploymentResult,confirmDialogResult} = props;
-const [dialogTitle,setDialogTitle] = useState('Confirm');
+const [dialogTitle,setDialogTitle] = useState('');
 const [open,setOpen] = useState(true);
 
 const handleClose = () =>{
     props.confirmDialogValue(0,false);
 }
-const handleCloseOk = () =>{
-   deploymentResult.splice(confirmDialogResult.rowDeleteIndex,1);
-   props.confirmDialogValue(0,false);
+const handleCloseOk = async() =>{
+//    deploymentResult.splice(confirmDialogResult.rowDeleteIndex,1);
+//    props.confirmDialogValue(0,false);
    //props.getDeploymentRecords();
-  setOpen(false);
+   await props.deleteDeploymentRecord(deploymentResult[confirmDialogResult.rowDeleteIndex]);
+   props.getDeploymentRecords();
+   props.confirmDialogValue(0,false);
+   props.successErrorDialog(true);
+  
+   setDialogTitle('Confirm');
+   setOpen(false);
 }
 useEffect(()=>{
  
@@ -52,7 +58,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-    getDeploymentRecords,confirmDialogValue
+    getDeploymentRecords,confirmDialogValue,deleteDeploymentRecord,successErrorDialog
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(ConfirmationBox);

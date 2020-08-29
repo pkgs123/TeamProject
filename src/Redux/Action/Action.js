@@ -1,5 +1,6 @@
-import {get,post,put} from '../../lib/api';
-import {OneJio_Get_Deployment,OneJio_Post_Deployment,OneJio_Update_Deployment} from '../../configConstant/config';
+import {get,post,put,remove} from '../../lib/api';
+import {OneJio_Get_Deployment,OneJio_Post_Deployment,
+    OneJio_Update_Deployment,OneJio_Delete_Deployment} from '../../configConstant/config';
 
 const getDeploymentRecords = () => {
 
@@ -62,7 +63,29 @@ const updateDeploymentRecord = (payload)=>{
    }
 }
 
+const deleteDeploymentRecord = (payload)=>{
+    let url = OneJio_Delete_Deployment;
 
+    let response;
+
+   return async (dispatch)=>{
+       try{
+            response = await remove(url,payload);
+           console.log("deleteResponse",response);
+           dispatch({
+               type: 'DELETE_DEPLOYMENT',
+               payload: response
+           })
+       }
+       catch(error){
+           console.log("error",error);
+       dispatch({
+           type: 'DELETE_DEPLOYMENT',
+           payload:error
+       })
+   }
+   }
+}
 
    const deploymentRowTable = (...args) =>{
 
@@ -112,4 +135,5 @@ const updateDeploymentRecord = (payload)=>{
 
 
     export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable,
-        deploymentCreateRecords,confirmDialogValue,successErrorDialog,updateDeploymentRecord}
+        deploymentCreateRecords,confirmDialogValue,
+        successErrorDialog,updateDeploymentRecord,deleteDeploymentRecord}
