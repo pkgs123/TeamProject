@@ -122,8 +122,9 @@ function DeploymentReport(props) {
     const handleEdit = (ind) => {
         debugger;
         props.deploymentRowTable(ind, true);
+
         setCreate(false);
-       // setEdit(!edit);
+        setEdit(!edit);
     }
     const handleDelete = (ind) => {
         debugger;
@@ -132,13 +133,14 @@ function DeploymentReport(props) {
        setCreate(!create)
     }
     const createNewRecord = () =>{
-
+       
         let emptyRowObj={
             AppName:'',Feature:'',FeatureStatus:'',UserStoryId:null,UserStoryStatus:'',TaskId:null,
             TaskIdStatus:'',Functional:'',Developer:'',overAllStatus:'',ReleaseNumber:null,NatureOfChange:'',
-            UiArtifacts:null,ApiArtifacts:null,edit:true
+            UiArtifacts:null,ApiArtifacts:null,edit:true,createIndicator:true
         }
         props.deploymentCreateRecords(emptyRowObj);
+
         setCreate(!create)
     }
     const handleSaveRecord =(ind) =>{
@@ -159,19 +161,25 @@ function DeploymentReport(props) {
              "UiArtifacts":uiArtifact,
              "ApiArtifacts":apiArtifact
         };
-        if(payload.AppName || payload.Feature=== 0 || payload.FeatureStatus || payload.UserStoryId===0 || payload.UserStoryStatus || payload.TaskId===0 || payload.TaskIdStatus || payload.Functional || payload.Developer || payload.overAllStatus || payload.ReleaseNumber || payload.NatureOfChange || payload.UiArtifacts===0 || payload.ApiArtifacts===0){
-          props.deploymentRowTable(ind, true);
+        if(payload.AppName==="" || payload.Feature=== 0 || payload.FeatureStatus==="" || payload.UserStoryId===0 || payload.UserStoryStatus==="" || payload.TaskId===0 || payload.TaskIdStatus==="" || payload.Functional==="" || payload.Developer==="" || payload.overAllStatus==="" || payload.ReleaseNumber==="" || payload.NatureOfChange==="" || payload.UiArtifacts===0 || payload.ApiArtifacts===0){
+         // props.deploymentRowTable(ind, true);
           props.postNewDeploymentRecords(payload);
           props.successErrorDialog(true);
           setCreate(!create)
           return;
           }
+
+          if(deploymentResult[ind].edit){
+            props.updateDeploymentRecord(payload)
+            setCreate()
+            return
+           }
+          
         props.postNewDeploymentRecords(payload);
         props.deploymentRowTable(ind, false);
-
         props.successErrorDialog(true);
-        setCreate(!create)
-        //setEdit(!edit);
+        setCreate(!create);
+        // setEdit(!edit);
     }
     useEffect(() => {
         props.getDeploymentRecords();
@@ -392,16 +400,16 @@ function DeploymentReport(props) {
                                             <TableCell>
                                                 <Box display="flex" flexDirection="row">
                                                
-                                               {data.UID !== undefined &&
+                                               {!data.edit &&
                                                 <Tooltip title="Edit" placement="left-start">
                                                <EditIcon style={{marginRight:'10%',color:'limegreen'}}
                                                     onClick={() => handleEdit((page * rowsPerPage) + ind)}></EditIcon>
                                                     </Tooltip>
-                                                  }
-                                                <Tooltip title="Save" placement="left-start">
-                                                <SaveIcon style={{color:'darkorchid',marginRight:'10%'}} onClick={()=>handleSaveRecord((page * rowsPerPage) + ind)}/>
+                                               }
+                                              { data.edit && <Tooltip title="Save" placement="left-start">
+                                              <SaveIcon style={{color:'darkorchid',marginRight:'10%'}} disabled onClick={()=>handleSaveRecord((page * rowsPerPage) + ind)}/>
                                                 </Tooltip>
-
+                                            }
                                                 <Tooltip title="Cancel" placement="left-start">
                                                 <HighlightOffIcon style={{marginRight:'5%',color:'red'}} onClick={() => handleDelete((page * rowsPerPage) + ind)}></HighlightOffIcon>
                                                 </Tooltip> 

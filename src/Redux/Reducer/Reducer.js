@@ -26,7 +26,9 @@ const setDeploymentRecordValue = (state,action)=>{
 }
 
 const createEmptyDeploymentRecord = (state,action) =>{
+
     let dataArray = state.deploymentRecords;
+
     dataArray.unshift(action.payload);
     console.log("dataArray",dataArray)
 
