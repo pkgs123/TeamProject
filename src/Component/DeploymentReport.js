@@ -205,7 +205,7 @@ function DeploymentReport(props) {
                 <img alt="" src={logo} width="30" height="30"></img><h4 style={{ marginLeft: '44%', fontStyle: "normal" }}>{compName}</h4>
                 {/* <Button style={{color:"white",backgroundColor:"blueviolet",marginLeft:'40%'}}>Create</Button> */}
                 <Tooltip title="Back" placeholder="left-start"> 
-                <ArrowBackIcon style={{ marginLeft: '40%', backgroundColor: 'darksalmon' }} onClick={onNavBack} />
+                <ArrowBackIcon style={{ marginLeft: '41%', backgroundColor: 'darksalmon' }} onClick={onNavBack} />
                 </Tooltip>
             </AppBar>
             <Paper>
