@@ -23,3 +23,7 @@ export async function get(url) {
 export async function post(url, payload) {
     return apiCall(url, 'POST', payload);
 }
+
+export async function put(url, payload) {
+    return apiCall(url, 'PUT', payload);
+}

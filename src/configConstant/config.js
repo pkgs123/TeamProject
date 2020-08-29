@@ -4,3 +4,5 @@ const URL1 = HOST_URL + '/api/onejioteam/';
 
 export const OneJio_Get_Deployment = URL1 + 'getDeployments';
 export const OneJio_Post_Deployment = URL1 + 'postDeployment';
+export const OneJio_Update_Deployment = URL1 + 'updateDeploymentRecord';
+export const OneJio_Delete_Deployment = URL1 + 'deleteDeploymentRecord';

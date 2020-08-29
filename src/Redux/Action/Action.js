@@ -1,5 +1,5 @@
-import {get,post} from '../../lib/api';
-import {OneJio_Get_Deployment,OneJio_Post_Deployment} from '../../configConstant/config';
+import {get,post,put} from '../../lib/api';
+import {OneJio_Get_Deployment,OneJio_Post_Deployment,OneJio_Update_Deployment} from '../../configConstant/config';
 
 const getDeploymentRecords = () => {
 
@@ -36,6 +36,33 @@ const getDeploymentRecords = () => {
     }
     }
     }
+
+const updateDeploymentRecord = (payload)=>{
+
+    let url = OneJio_Update_Deployment;
+
+    let response;
+
+   return async (dispatch)=>{
+       try{
+            response = await put(url,payload);
+           console.log("updateResponse",response);
+           dispatch({
+               type: 'UPDATE_DEPLOYMENT',
+               payload: response
+           })
+       }
+       catch(error){
+           console.log("error",error);
+       dispatch({
+           type: 'UPDATE_DEPLOYMENT',
+           payload:error
+       })
+   }
+   }
+}
+
+
 
    const deploymentRowTable = (...args) =>{
 
@@ -81,5 +108,8 @@ const getDeploymentRecords = () => {
            })
        }
    }
+
+
+
     export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable,
-        deploymentCreateRecords,confirmDialogValue,successErrorDialog}
+        deploymentCreateRecords,confirmDialogValue,successErrorDialog,updateDeploymentRecord}

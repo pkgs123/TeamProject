@@ -10,7 +10,9 @@ import SaveIcon from '@material-ui/icons/Save';
 import history from '../History';
 import { connect } from 'react-redux';
 
-import { getDeploymentRecords, deploymentRowTable, deploymentCreateRecords,confirmDialogValue,postNewDeploymentRecords,successErrorDialog } from '../Redux/Action/Action';
+import { getDeploymentRecords, deploymentRowTable, deploymentCreateRecords,
+    confirmDialogValue,postNewDeploymentRecords,
+    successErrorDialog,updateDeploymentRecord } from '../Redux/Action/Action';
 
 import AppBar from './AppBar';
 
@@ -143,7 +145,7 @@ function DeploymentReport(props) {
 
         setCreate(!create)
     }
-    const handleSaveRecord =(ind) =>{
+    const handleSaveRecord = async (ind) =>{
 
         let payload = {
             "AppName":appNameValue,
@@ -161,22 +163,26 @@ function DeploymentReport(props) {
              "UiArtifacts":uiArtifact,
              "ApiArtifacts":apiArtifact
         };
-        if(payload.AppName==="" || payload.Feature=== 0 || payload.FeatureStatus==="" || payload.UserStoryId===0 || payload.UserStoryStatus==="" || payload.TaskId===0 || payload.TaskIdStatus==="" || payload.Functional==="" || payload.Developer==="" || payload.overAllStatus==="" || payload.ReleaseNumber==="" || payload.NatureOfChange==="" || payload.UiArtifacts===0 || payload.ApiArtifacts===0){
-         // props.deploymentRowTable(ind, true);
-          props.postNewDeploymentRecords(payload);
-          props.successErrorDialog(true);
-          setCreate(!create)
-          return;
-          }
+        // if(payload.AppName==="" || payload.Feature=== 0 || payload.FeatureStatus==="" || payload.UserStoryId===0 || payload.UserStoryStatus==="" || payload.TaskId===0 || payload.TaskIdStatus==="" || payload.Functional==="" || payload.Developer==="" || payload.overAllStatus==="" || payload.ReleaseNumber==="" || payload.NatureOfChange==="" || payload.UiArtifacts===0 || payload.ApiArtifacts===0){
+        //  // props.deploymentRowTable(ind, true);
+        //   props.postNewDeploymentRecords(payload);
+        //   props.successErrorDialog(true);
+        //   setCreate(!create)
+        //   return;
+        //   }
 
+        //Update Functionality
           if(deploymentResult[ind].edit){
-            props.updateDeploymentRecord(payload)
-            setCreate()
+             props.updateDeploymentRecord(deploymentResult[ind]);
+             props.deploymentRowTable(ind, false);
+             props.successErrorDialog(true);
+            setCreate(!create);
             return
            }
           
         props.postNewDeploymentRecords(payload);
         props.deploymentRowTable(ind, false);
+       // props.getDeploymentRecords();
         props.successErrorDialog(true);
         setCreate(!create);
         // setEdit(!edit);
@@ -440,13 +446,14 @@ function DeploymentReport(props) {
 }
 const mapStateToProps = (state) => {
     return {
-        deploymentResult: state.Reducer.deploymentRecords
+        deploymentResult: state.Reducer.deploymentRecords,
+        
     }
 }
 
 const mapDispatchToProps = {
     getDeploymentRecords, deploymentRowTable,postNewDeploymentRecords,
-    deploymentCreateRecords,confirmDialogValue,successErrorDialog
+    deploymentCreateRecords,confirmDialogValue,successErrorDialog,updateDeploymentRecord
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeploymentReport);

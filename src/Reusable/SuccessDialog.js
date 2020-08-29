@@ -19,13 +19,20 @@ const useStyles = makeStyles((theme) => ({
 function SuccessDialog(props) {
   debugger;
   const classes = useStyles();
-  const { postMessage, successErrorDialogOpen } = props;
-
+  const { postMessage, successErrorDialogOpen,updateResponseResult } = props;
+  console.log("updateResponseResult",updateResponseResult);
   let postMsgDisplay='';
 
- if(props.postMessage.status === 201 || props.postMessage.status === 200) {
+ if(props.postMessage.status === 201 || props.updateResponseResult.status === 200) {
+   if(postMessage.length !== 0){
     postMsgDisplay = [postMessage.data];
     console.log(postMsgDisplay);
+   }
+   else if(updateResponseResult!==undefined){
+    postMsgDisplay = [updateResponseResult.data];
+    console.log(postMsgDisplay);
+   }
+   
   }
   else if((postMessage.length === undefined) && (props.postMessage.response.status === 400)) {
     postMsgDisplay = postMessage.response.data.message;
@@ -57,7 +64,8 @@ function SuccessDialog(props) {
 const mapStateToProps = state => {
   return {
     postMessage: state.Reducer.deploymentPostResponse,
-    successErrorDialogOpen: state.Reducer.successErrorDialogValue
+    successErrorDialogOpen: state.Reducer.successErrorDialogValue,
+    updateResponseResult: state.Reducer.updateResponse
   }
 }
 
