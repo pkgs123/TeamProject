@@ -17,7 +17,8 @@ class Graph extends Component {
                         labels : this.state.labels,
                         datasets : [{
                             data : [this.props.countDSM, this.props.countSCM,this.props.countFiori],
-                            backgroundColor :['#ED90B0','#967BD1','#B9F6CC']
+                            backgroundColor :['#ED90B0','#967BD1','#B9F6CC'],
+                            
                         }]
                     }}
                     height = '50%'

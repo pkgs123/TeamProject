@@ -447,12 +447,11 @@ function DeploymentReport(props) {
                 />
               
             </Paper>
-            <Paper style={{background:"transparent"}}>
+            <br/>
+            <Paper style={{background:"transparent",backgroundColor:'lightgray'}}>
+                <b style={{marginLeft:'5%'}}> OverAll Graphical Report:</b><br/>
                 <Graph/>
             </Paper>
-            {/* <Footer>
-
-            </Footer> */}
               <ConfirmationDialog />
              <SuccessErrorDialog/>
         </div>
