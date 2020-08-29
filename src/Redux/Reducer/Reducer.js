@@ -1,5 +1,9 @@
 let initialState = {
     deploymentRecords :[],
+    countScm : 0,
+    countDsm :0,
+    countFiori :0,
+
     confirmDialogOptions:{},
     deploymentPostResponse:[],
     successErrorDialogValue:false,
@@ -8,9 +12,24 @@ let initialState = {
 }
 
 const findDeploymentRecords = (state, action) => {
+    let arr = action.payload, countDSM = 0 ,countSCM = 0 , countFiori = 0 ;
+    for(let i= 0 ;i <arr.length;i++){
+        if(arr[i].AppName==="DSM"){
+            countDSM++ ;
+        }
+        else if(arr[i].AppName==="SCM"){
+            countSCM++ ;
+        }
+        else if(arr[i].AppName === "FIORI"){
+            countFiori++;
+        }
+    }
     return {
         ...state,
-        deploymentRecords: action.payload
+        deploymentRecords: action.payload,
+        countScm : countDSM,
+        countDsm : countSCM ,
+        countFiori : countFiori ,
     }
 }
 const setDeploymentRecordValue = (state,action)=>{

@@ -20,12 +20,17 @@ import logo from '../Images/jio.png';
 import createIcon from '../Images/createIcon.png';
 import EditIcon from '@material-ui/icons/Edit';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import Graph from '../Reusable/Graph';
 import ConfirmationDialog from '../Reusable/ConfirmationBox';
 import SuccessErrorDialog from '../Reusable/SuccessDialog';
 import { indigo } from '@material-ui/core/colors';
 
 const onNavBack = () => {
     history.push('/');
+}
+const body={ 
+    display: "flex",
+    flexDirection: "column"
 }
 
 function DeploymentReport(props) {
@@ -194,7 +199,7 @@ function DeploymentReport(props) {
         props.getDeploymentRecords();
     }, [])
     return (
-        <>
+        <div style={body}>
             <AppBar>
                 <img alt="" src={logo} width="30" height="30"></img><h4 style={{ marginLeft: '44%', fontStyle: "normal" }}>{compName}</h4>
                 {/* <Button style={{color:"white",backgroundColor:"blueviolet",marginLeft:'40%'}}>Create</Button> */}
@@ -442,9 +447,15 @@ function DeploymentReport(props) {
                 />
               
             </Paper>
+            <Paper style={{background:"transparent"}}>
+                <Graph/>
+            </Paper>
+            {/* <Footer>
+
+            </Footer> */}
               <ConfirmationDialog />
              <SuccessErrorDialog/>
-        </>
+        </div>
     )
 }
 const mapStateToProps = (state) => {
