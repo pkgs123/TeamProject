@@ -18,7 +18,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Tooltip } from '@material-ui/core';
-
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import logo from '../../Images/jio.png';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +34,12 @@ const useStyles = makeStyles((theme) => ({
     width: '400px',
     height: '407px',
     backgroundSize: 'cover'
+  },
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
   },
   avatar: {
     // margin: theme.spacing(1),
@@ -50,25 +57,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-
-
-
-
-
-
 const Signup = () => {
   const classes = useStyles();
   const[unameDisplay,setUserNameDisplay] = useState(false);
@@ -79,30 +67,29 @@ const Signup = () => {
     email: "",
     password: "",
     error: "",
-    sucess: false
+    sucess: false,
+    errorValue:false
   });
-
-  const { name, email, password, error, success } = values;
+const[close,onClose]=useState(true);
+  const { name, email, password, error, success,errorValue } = values;
 
   const handleChange = name => event => {
     setValues({ ...values, error: false, [name]: event.target.value })
   }
 
-  // const onSignUp = ()=>{
-  //   // setUserNameDisplay(true);
-  //   // setSignText('Sign up');
-  // } 
-
-
   const onSignUp = event => {
+
     event.preventDefault();
-    setUserNameDisplay(true);
-    setSignText('Sign up');
+    if(name === "" || email === "" || password === ""){
+      setUserNameDisplay(true);
+      setSignText('Sign up');
+      return;
+    }
     setValues({ ...values, error: false });
     signUp({ name, email, password })
       .then(data => {
         if (data.error) {
-          setValues({ ...values, error: data.error, sucess: false })
+          setValues({ ...values, error: data.error, sucess: false,errorValue:true })
         } else {
           setValues({
             name: "",
@@ -110,7 +97,9 @@ const Signup = () => {
             password: "",
             error: "",
             success: true,
+            errorValue:false
           })
+          setUserNameDisplay(false);
         }
       })
       .catch(error => {
@@ -118,6 +107,9 @@ const Signup = () => {
       })
   }
 
+  const handleClose = () =>{
+    onClose(false);
+  }
   const signUpForm = () => {
 
     return (
@@ -146,6 +138,7 @@ const Signup = () => {
             fullWidth
             type="text"
              autoComplete="UserName"
+             value={name}
              onChange={handleChange("name")}
           />
                 }
@@ -160,6 +153,7 @@ const Signup = () => {
                  // name="email"
                   autoComplete="email"
                   autoFocus
+                  value={email}
                   onChange={handleChange("email")}
                 />
                 <TextField
@@ -173,6 +167,7 @@ const Signup = () => {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  value = {password}
                   onChange={handleChange("password")}
                 />
                 <Tooltip title="Sign In">
@@ -209,36 +204,56 @@ const Signup = () => {
   }
 
   const successMessage = () => {
+    
     return (
-      <div className="row">
-        <div className="col-md-6 offset-sm-3 text-left">
-          <div className="alert alert-success"
-            style={{ display: success ? "" : "none" }}>
-            Account Successfully Created . Please login <Link to="/signin">here</Link>
-          </div>
-        </div>
-      </div>
+      // <div className="row">
+      // <div className="col-md-6 offset-sm-3 text-left">
+      // <div className="alert alert-success"
+      // style={{display:success? "" : "none"}}>
+      //     Account Successfully Created . Please login <Link to="/">here</Link>
+      // </div>
+      //     </div>
+      //     </div>
 
+
+
+      <div className={classes.root}>
+      <Snackbar open={success}  onClose={handleClose}>
+            <MuiAlert elevation={6} variant="filled" onClose={handleClose} severity="success">
+            Account Successfully Created .
+            </MuiAlert>
+        
+      </Snackbar>
+    </div>
+         
     )
   }
 
   const errorMessage = () => {
     return (
-      <div className="row">
-        <div className="col-md-6 offset-sm-3 text-left">
-          <div className="alert alert-danger"
-            style={{ display: error ? "" : "none" }}>
-            {error}
-          </div>
-        </div>
-      </div>
+      // <div className="row">
+      //   <div className="col-md-6 offset-sm-3 text-left">
+      //     <div className="alert alert-danger"
+      //       style={{ display: error ? "" : "none" }}>
+      //       {error}
+      //     </div>
+      //   </div>
+      // </div>
+      <div className={classes.root}>
+      <Snackbar open={errorValue} autoHideDuration={6000} onClose={handleClose}>
+            <MuiAlert elevation={6} variant="filled" onClose={handleClose} severity="error">
+           {error}
+            </MuiAlert>
+        
+      </Snackbar>
+    </div>
     )
   }
 
 
   return (
     <>
-      <h1>
+      <h1 style={{marginTop:'5%',color:'white',fontSize:'large'}}>
         {successMessage()}
         {errorMessage()}
         <br /><br />
