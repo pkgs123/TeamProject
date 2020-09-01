@@ -27,7 +27,7 @@ import SuccessErrorDialog from '../Reusable/SuccessDialog';
 import { indigo } from '@material-ui/core/colors';
 
 const onNavBack = () => {
-    history.push('/');
+    history.push('/applist');
 }
 const body={ 
     display: "flex",
@@ -445,8 +445,9 @@ function DeploymentReport(props) {
                     page={page}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
+                    // ActionsComponent={}
                 />
-              
+            
             </Paper>
             <br/>
             <Paper style={{background:"transparent",backgroundColor:'lightgray'}}>

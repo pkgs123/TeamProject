@@ -6,12 +6,16 @@ import CodReview from './Component/CodeReview';
 import DsmReport from './Component/DsmReport';
 import ScmReport from './Component/ScmReport';
 import MarcomReport from './Component/Marcom';
+import signUp from './Component/AuthComponent/SignUp';
+
 import history from './History';
 function App(props){
 return(
     <>
    <HashRouter history={history}>
-       <Route path="/" component={CardList} exact>
+       <Route path="/" component={signUp} exact>
+       </Route>
+       <Route path="/applist" component={CardList} exact>
        </Route>
        <Route path="/deployment" component={Deployment} exact/>
        <Route path="/codereview" component={CodReview} exact/>

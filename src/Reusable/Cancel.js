@@ -5,7 +5,7 @@ import history from '../History';
 function CancelBtn(props){
 
     const onNavBack = () => {
-        history.push('/');
+        history.push('/applist');
     }
     
     return(
