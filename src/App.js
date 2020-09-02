@@ -7,12 +7,16 @@ import DsmReport from './Component/DsmReport';
 import ScmReport from './Component/ScmReport';
 import MarcomReport from './Component/Marcom';
 import signUp from './Component/AuthComponent/SignUp';
-
+//import signIn from './Component/AuthComponent/SignIn';
 import history from './History';
 function App(props){
 return(
     <>
    <HashRouter history={history}>
+   
+       {/* <Route path="/signup" component={signIn} exact>
+       </Route> */}
+
        <Route path="/" component={signUp} exact>
        </Route>
        <Route path="/applist" component={CardList} exact>

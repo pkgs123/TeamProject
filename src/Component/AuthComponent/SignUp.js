@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 //import Base from '../core/Base';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from "react-router-dom";
 //import {signUp} from '../auth/helper/index'
-import { signUp } from '../AuthComponent/AuthAPI';
+import { signUp,signIn,isAuthenticated, authenticateUser } from '../AuthComponent/AuthAPI';
 import AppBar from '../AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-//import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import Checkbox from '@material-ui/core/Checkbox';
+// //import Link from '@material-ui/core/Link';
+// import Grid from '@material-ui/core/Grid';
+// import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -21,7 +21,9 @@ import { Tooltip } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import logo from '../../Images/jio.png';
-
+import {connect} from 'react-redux';
+import {setSignUpErrorDialog,setSignUpSuccessDialog} from '../../Redux/Action/Action';
+//import signInForm from '../AuthComponent/SignIn';
 const useStyles = makeStyles((theme) => ({
   paper: {
     // marginTop: theme.spacing(8),
@@ -42,36 +44,41 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   avatar: {
-    // margin: theme.spacing(1),
+  margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
     marginLeft: '41%'
   },
   form: {
     width: '100%',
     // height:'16%%', // Fix IE 11 issue.
-    //marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1),
   },
   submit: {
-    // margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3, 0, 2),
     marginTop: '0%'
   },
 }));
 
-const Signup = () => {
+const Signup = (props) => {
   const classes = useStyles();
   const[unameDisplay,setUserNameDisplay] = useState(false);
   const[signText,setSignText] = useState('Sign in');
   const [show, setShow] = useState(false);
+
   const [values, setValues] = useState({
     name: "",
     email: "",
     password: "",
-    error: "",
+    error: "",            
     sucess: false,
-    errorValue:false
+    errorValue:false,
+    loading: false,
+		didRedirect: false,
   });
-const[close,onClose]=useState(true);
-  const { name, email, password, error, success,errorValue } = values;
+
+  const[close,onClose]=useState(true);
+  const { name, email, password, error,sucess,errorValue,loading, didRedirect  } = values;
+  const { user } = isAuthenticated();
 
   const handleChange = name => event => {
     setValues({ ...values, error: false, [name]: event.target.value })
@@ -81,6 +88,7 @@ const[close,onClose]=useState(true);
 
     event.preventDefault();
     if(name === "" || email === "" || password === ""){
+      props.setSignUpSuccessDialog(false);
       setUserNameDisplay(true);
       setSignText('Sign up');
       return;
@@ -90,7 +98,9 @@ const[close,onClose]=useState(true);
       .then(data => {
         if (data.error) {
           setValues({ ...values, error: data.error, sucess: false,errorValue:true })
+          props.setSignUpErrorDialog(errorValue);
         } else {
+         
           setValues({
             name: "",
             email: "",
@@ -99,17 +109,76 @@ const[close,onClose]=useState(true);
             success: true,
             errorValue:false
           })
+          props.setSignUpSuccessDialog(true);
           setUserNameDisplay(false);
+          setSignText('Sign in');
         }
       })
       .catch(error => {
         console.log(error)
       })
+    
+    
+     
   }
 
-  const handleClose = () =>{
-    onClose(false);
+	const onSignIn = (event) => {
+    event.preventDefault();
+    if(email === "" || password === ""){
+      props.setSignUpSuccessDialog(false);
+      setUserNameDisplay(false);
+      setSignText('Sign in');
+      return;
+    }
+
+
+		setValues({ ...values, error: false, loading: true });
+		signIn({ email, password })
+			.then((data) => {
+				if (data.error) {
+          setValues({ ...values, error: data.error, loading: false,errorValue:true });
+          props.setSignUpErrorDialog(errorValue);
+				} else {
+          props.setSignUpSuccessDialog(true);
+					authenticateUser(data, () => {
+						setValues({ ...values, didRedirect: true });
+					});
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
+  const loadingMessage = () => {
+		return (
+			loading && (
+				<div className="alert alert-info">
+					<h2>Loading...</h2>
+				</div>
+			)
+		);
+	};
+
+
+	const redirect = () => {
+		if (didRedirect) {
+      return <Redirect to="/applist"></Redirect>;
+		}
+
+		if (isAuthenticated()) {
+			return <Redirect to="/applist"></Redirect>;
+		}
+	};
+
+  const handleErrorDialogClose = () =>{
+    props.setSignUpErrorDialog(false);
   }
+  const handleSuccessDialogClose = () =>{
+    props.setSignUpSuccessDialog(false);
+  } 
+   
+  
   const signUpForm = () => {
 
     return (
@@ -127,8 +196,8 @@ const[close,onClose]=useState(true);
               <Typography component="h1" variant="h5" style={{ marginLeft: '36%', color: 'white' }}>
                 {signText}
         </Typography>
-              {/* <form className={classes.form}> */}
-              <div>
+              <form className={classes.form} noValidate>
+              {/* <div> */}
                 {unameDisplay && <TextField
             style={{backgroundColor:'white'}}
            variant="outlined"
@@ -137,7 +206,9 @@ const[close,onClose]=useState(true);
             required
             fullWidth
             type="text"
+            name="UserName"
              autoComplete="UserName"
+             autoFocus
              value={name}
              onChange={handleChange("name")}
           />
@@ -148,9 +219,9 @@ const[close,onClose]=useState(true);
                   margin="normal"
                   required
                   fullWidth
-                  id="email"
+                 // id="email"
                   placeholder="Email Address"
-                 // name="email"
+                 name="email"
                   autoComplete="email"
                   autoFocus
                   value={email}
@@ -162,21 +233,24 @@ const[close,onClose]=useState(true);
                   margin="normal"
                   required
                   fullWidth
-                  // name="password"
+                   name="password"
                   placeholder="Password"
                   type="password"
-                  id="password"
+                 // id="password"
                   autoComplete="current-password"
+                  autoFocus
                   value = {password}
                   onChange={handleChange("password")}
                 />
                 <Tooltip title="Sign In">
                   <Button
-                    type="submit"
+                    type="button"
                     fullWidth
                     variant="contained"
                     color="primary"
                     className={classes.submit}
+                    style={{ marginTop: '4%' }}
+                   onClick={onSignIn}
                   >
                     Continue
           </Button>
@@ -184,7 +258,7 @@ const[close,onClose]=useState(true);
                 <br />
                 <Tooltip title="Sign Up">
                   <Button
-                    type="submit"
+                    type="button"
                     fullWidth
                     variant="contained"
                     color="secondary"
@@ -194,8 +268,8 @@ const[close,onClose]=useState(true);
                     Sign Up
           </Button>
                 </Tooltip>
-              {/* </form> */}
-              </div>
+              </form>
+              {/* </div> */}
             </div>
           </div>
         </Container>
@@ -206,23 +280,12 @@ const[close,onClose]=useState(true);
   const successMessage = () => {
     
     return (
-      // <div className="row">
-      // <div className="col-md-6 offset-sm-3 text-left">
-      // <div className="alert alert-success"
-      // style={{display:success? "" : "none"}}>
-      //     Account Successfully Created . Please login <Link to="/">here</Link>
-      // </div>
-      //     </div>
-      //     </div>
-
-
-
+   
       <div className={classes.root}>
-      <Snackbar open={success}  onClose={handleClose}>
-            <MuiAlert elevation={6} variant="filled" onClose={handleClose} severity="success">
+      <Snackbar open={props.signUpDialogSuccessDisplay} autoHideDuration={6000}  onClose={handleSuccessDialogClose}>
+            <MuiAlert elevation={6} variant="filled" onClose={handleSuccessDialogClose} severity="success">
             Account Successfully Created .
             </MuiAlert>
-        
       </Snackbar>
     </div>
          
@@ -231,17 +294,10 @@ const[close,onClose]=useState(true);
 
   const errorMessage = () => {
     return (
-      // <div className="row">
-      //   <div className="col-md-6 offset-sm-3 text-left">
-      //     <div className="alert alert-danger"
-      //       style={{ display: error ? "" : "none" }}>
-      //       {error}
-      //     </div>
-      //   </div>
-      // </div>
+
       <div className={classes.root}>
-      <Snackbar open={errorValue} autoHideDuration={6000} onClose={handleClose}>
-            <MuiAlert elevation={6} variant="filled" onClose={handleClose} severity="error">
+      <Snackbar open={props.signUpDialogErrorDisplay} autoHideDuration={6000} onClose={handleErrorDialogClose}>
+            <MuiAlert elevation={6} variant="filled"  onClose={handleErrorDialogClose} severity="error">
            {error}
             </MuiAlert>
         
@@ -253,15 +309,29 @@ const[close,onClose]=useState(true);
 
   return (
     <>
-      <h1 style={{marginTop:'5%',color:'white',fontSize:'large'}}>
+     {signText === "Sign up" ? <h1 style={{marginTop:'5%',color:'white',fontSize:'large'}}>
         {successMessage()}
         {errorMessage()}
         <br /><br />
         {signUpForm()}
+      </h1>: <h1 style={{marginTop:'5%',color:'white',fontSize:'large'}}>
+      {loadingMessage()}
+			{errorMessage()}
+			{signUpForm()}
+			{redirect()}
       </h1>
+     }
     </>
   )
 }
 
-
-export default Signup;
+const mapStateToProps = state =>{
+  return{
+    signUpDialogErrorDisplay:state.Reducer.signUpErrorDialogValue,
+    signUpDialogSuccessDisplay:state.Reducer.signUpSuccessDialogValue
+  }
+}
+const mapDispatchToProps={
+setSignUpErrorDialog,setSignUpSuccessDialog
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Signup);

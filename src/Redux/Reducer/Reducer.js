@@ -8,7 +8,9 @@ let initialState = {
     deploymentPostResponse:[],
     successErrorDialogValue:false,
     updateResponse:[],
-    deleteResponse:[]
+    deleteResponse:[],
+    signUpErrorDialogValue:false,
+    signUpSuccessDialogValue:false
 }
 
 const findDeploymentRecords = (state, action) => {
@@ -89,6 +91,18 @@ const setSuccessErrorDialogValue = (state,action) =>{
         successErrorDialogValue: action.payload
     }
 }
+const setSignUPErrorDiaLog = (state,action)=>{
+    return{
+        ...state,
+        signUpErrorDialogValue:action.payload
+    }
+}
+const setSignUpSuccessLog = (state,action)=>{
+    return{
+        ...state,
+        signUpSuccessDialogValue:action.payload
+    }
+}
 const deployment = (state = initialState, action) => {
     switch (action.type) {
         case 'GET_DEPLOYMENT':
@@ -107,6 +121,10 @@ const deployment = (state = initialState, action) => {
               return setUpdateResponse(state,action);
         case 'DELETE_DEPLOYMENT':
               return setDeleteResponse(state,action);
+        case 'SIGNUP_ERROR_DIALOG':
+            return setSignUPErrorDiaLog(state,action);
+        case 'SIGNUP_SUCCESS_DIALOG':
+            return setSignUpSuccessLog(state,action);
         default: return state;
     }
 }

@@ -132,8 +132,24 @@ const deleteDeploymentRecord = (payload)=>{
        }
    }
 
+ const setSignUpErrorDialog =(...args)=>{
+     return async(dispatch)=>{
+         dispatch({
+             type:'SIGNUP_ERROR_DIALOG',
+             payload:args[0]
+         })
+     }
+ }
 
+ const setSignUpSuccessDialog = (...args)=>{
+     return async(dispatch) =>{
+         dispatch({
+             type:'SIGNUP_SUCCESS_DIALOG',
+             payload:args[0]
+         })
+     }
+ }
 
     export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable,
         deploymentCreateRecords,confirmDialogValue,
-        successErrorDialog,updateDeploymentRecord,deleteDeploymentRecord}
+        successErrorDialog,updateDeploymentRecord,deleteDeploymentRecord,setSignUpErrorDialog,setSignUpSuccessDialog}
