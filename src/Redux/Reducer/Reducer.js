@@ -10,7 +10,8 @@ let initialState = {
     updateResponse:[],
     deleteResponse:[],
     signUpErrorDialogValue:false,
-    signUpSuccessDialogValue:false
+    signUpSuccessDialogValue:false,
+    authenticateEnableDisable:false
 }
 
 const findDeploymentRecords = (state, action) => {
@@ -103,6 +104,12 @@ const setSignUpSuccessLog = (state,action)=>{
         signUpSuccessDialogValue:action.payload
     }
 }
+const setAuthenticationPage = (state,action)=>{
+    return{
+        ...state,
+        authenticateEnableDisable:action.payload
+    }
+}
 const deployment = (state = initialState, action) => {
     switch (action.type) {
         case 'GET_DEPLOYMENT':
@@ -125,6 +132,8 @@ const deployment = (state = initialState, action) => {
             return setSignUPErrorDiaLog(state,action);
         case 'SIGNUP_SUCCESS_DIALOG':
             return setSignUpSuccessLog(state,action);
+        case 'SHOULD_AUTHENTICATE':
+             return setAuthenticationPage(state,action);
         default: return state;
     }
 }

@@ -149,7 +149,16 @@ const deleteDeploymentRecord = (payload)=>{
          })
      }
  }
-
+ 
+ const shouldAuthenticate = (...args)=>{
+    return async(dispatch) =>{
+        dispatch({
+            type:'SHOULD_AUTHENTICATE',
+            payload:args[0]
+        })
+    }
+}
     export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable,
         deploymentCreateRecords,confirmDialogValue,
-        successErrorDialog,updateDeploymentRecord,deleteDeploymentRecord,setSignUpErrorDialog,setSignUpSuccessDialog}
+        successErrorDialog,updateDeploymentRecord,
+        deleteDeploymentRecord,setSignUpErrorDialog,setSignUpSuccessDialog,shouldAuthenticate}

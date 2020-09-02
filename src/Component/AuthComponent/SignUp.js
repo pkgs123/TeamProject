@@ -22,7 +22,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import logo from '../../Images/jio.png';
 import {connect} from 'react-redux';
-import {setSignUpErrorDialog,setSignUpSuccessDialog} from '../../Redux/Action/Action';
+import {setSignUpErrorDialog,setSignUpSuccessDialog,shouldAuthenticate} from '../../Redux/Action/Action';
 //import signInForm from '../AuthComponent/SignIn';
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -136,12 +136,14 @@ const Signup = (props) => {
 		signIn({ email, password })
 			.then((data) => {
 				if (data.error) {
+          props.shouldAuthenticate(didRedirect);
           setValues({ ...values, error: data.error, loading: false,errorValue:true });
           props.setSignUpErrorDialog(errorValue);
 				} else {
           props.setSignUpSuccessDialog(true);
 					authenticateUser(data, () => {
-						setValues({ ...values, didRedirect: true });
+            setValues({ ...values, didRedirect: true });
+            props.shouldAuthenticate(didRedirect);
 					});
 				}
 			})
@@ -332,6 +334,6 @@ const mapStateToProps = state =>{
   }
 }
 const mapDispatchToProps={
-setSignUpErrorDialog,setSignUpSuccessDialog
+setSignUpErrorDialog,setSignUpSuccessDialog,shouldAuthenticate
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Signup);
