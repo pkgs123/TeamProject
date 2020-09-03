@@ -64,20 +64,20 @@ const Signup = (props) => {
   const[unameDisplay,setUserNameDisplay] = useState(false);
   const[signText,setSignText] = useState('Sign in');
   const [show, setShow] = useState(false);
-
+const[signInBtnText,setSignInBtnText] = useState('');
   const [values, setValues] = useState({
     name: "",
     email: "",
     password: "",
     error: "",            
-    sucess: false,
+    success: false,
     errorValue:false,
     loading: false,
 		didRedirect: false,
   });
 
   const[close,onClose]=useState(true);
-  const { name, email, password, error,sucess,errorValue,loading, didRedirect  } = values;
+  const { name, email, password, error,success,errorValue,loading, didRedirect  } = values;
   const { user } = isAuthenticated();
 
   const handleChange = name => event => {
@@ -85,7 +85,7 @@ const Signup = (props) => {
   }
 
   const onSignUp = event => {
-
+    setSignInBtnText('');
     event.preventDefault();
     if(name === "" || email === "" || password === ""){
       props.setSignUpSuccessDialog(false);
@@ -97,7 +97,7 @@ const Signup = (props) => {
     signUp({ name, email, password })
       .then(data => {
         if (data.error) {
-          setValues({ ...values, error: data.error, sucess: false,errorValue:true })
+          setValues({ ...values, error: data.error, success: false,errorValue:true })
           props.setSignUpErrorDialog(errorValue);
         } else {
          
@@ -123,6 +123,7 @@ const Signup = (props) => {
   }
 
 	const onSignIn = (event) => {
+    setSignInBtnText('continue');
     event.preventDefault();
     if(email === "" || password === ""){
       props.setSignUpSuccessDialog(false);
@@ -130,7 +131,6 @@ const Signup = (props) => {
       setSignText('Sign in');
       return;
     }
-
 
 		setValues({ ...values, error: false, loading: true });
 		signIn({ email, password })
@@ -298,8 +298,8 @@ const Signup = (props) => {
     return (
 
       <div className={classes.root}>
-      <Snackbar open={props.signUpDialogErrorDisplay} autoHideDuration={6000} onClose={handleErrorDialogClose}>
-            <MuiAlert elevation={6} variant="filled"  onClose={handleErrorDialogClose} severity="error">
+      <Snackbar open={props.signUpDialogErrorDisplay}  onClose={handleErrorDialogClose}>
+            <MuiAlert elevation={6} variant="filled" onClose={handleErrorDialogClose} severity="error">
            {error}
             </MuiAlert>
         
@@ -311,18 +311,20 @@ const Signup = (props) => {
 
   return (
     <>
-     {signText === "Sign up" ? <h1 style={{marginTop:'5%',color:'white',fontSize:'large'}}>
+    {signInBtnText !== 'continue' ? <h1 style={{marginTop:'5%',color:'white',fontSize:'large'}}>
         {successMessage()}
         {errorMessage()}
         <br /><br />
         {signUpForm()}
-      </h1>: <h1 style={{marginTop:'5%',color:'white',fontSize:'large'}}>
+      </h1>
+       : <h1 style={{marginTop:'5%',color:'white',fontSize:'large'}}>
       {loadingMessage()}
 			{errorMessage()}
 			{signUpForm()}
 			{redirect()}
-      </h1>
-     }
+      </h1> 
+
+     }  
     </>
   )
 }
