@@ -35,10 +35,10 @@ export const signIn= (user)=>{
     })
 }
 
-export const signout= (next)=>{
+export const signout= ()=>{
     if(typeof window !== "undefined"){
         localStorage.removeItem("token")
-        next();
+        //next();
         return fetch(`${OneJio_SignOut}` , {
             method:"GET" , 
         })

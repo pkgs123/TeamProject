@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 //import Base from '../core/Base';
 import { Link, Redirect } from "react-router-dom";
 //import {signUp} from '../auth/helper/index'
@@ -23,6 +23,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import logo from '../../Images/jio.png';
 import {connect} from 'react-redux';
 import {setSignUpErrorDialog,setSignUpSuccessDialog,shouldAuthenticate} from '../../Redux/Action/Action';
+import history from '../../History';
 //import signInForm from '../AuthComponent/SignIn';
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -57,6 +58,26 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
     marginTop: '0%'
   },
+  content:{
+    marginBottom: '90px',
+    color: '#fff'
+  },
+  panel:{
+    maxWidth: '430px',
+    margin: '0 auto 20px',
+    borderRadius: '8px',
+    color: '#2d3748',
+    backgroundColor:'#fff',
+    boxShadow: '0 1px 1px rgba(0,0,0,0.05)'
+  },
+  h3:{
+    fontSize: '24px',
+  },
+  formgroup:{
+  position: 'relative',
+  marginBottom: '20px'
+  },
+  inputiconusername:{}
 }));
 
 const Signup = (props) => {
@@ -76,9 +97,21 @@ const[signInBtnText,setSignInBtnText] = useState('');
 		didRedirect: false,
   });
 
-  const[close,onClose]=useState(true);
+
+  useEffect(() => {
+    if(isAuthenticated()){
+      //  props.getDeploymentRecords();
+    }
+    else{
+        history.push('/');
+    }
+
+   
+}, [])
+
+  //const[close,onClose]=useState(true);
   const { name, email, password, error,success,errorValue,loading, didRedirect  } = values;
-  const { user } = isAuthenticated();
+  //const { user } = isAuthenticated();
 
   const handleChange = name => event => {
     setValues({ ...values, error: false, [name]: event.target.value })
@@ -137,13 +170,14 @@ const[signInBtnText,setSignInBtnText] = useState('');
 			.then((data) => {
 				if (data.error) {
           props.shouldAuthenticate(didRedirect);
+          props.setSignUpErrorDialog(true);
           setValues({ ...values, error: data.error, loading: false,errorValue:true });
-          props.setSignUpErrorDialog(errorValue);
 				} else {
-          props.setSignUpSuccessDialog(true);
+         // props.setSignUpSuccessDialog(true);
 					authenticateUser(data, () => {
+            props.shouldAuthenticate(true);
             setValues({ ...values, didRedirect: true });
-            props.shouldAuthenticate(didRedirect);
+           // history.push('/appList');
 					});
 				}
 			})
@@ -164,6 +198,7 @@ const[signInBtnText,setSignInBtnText] = useState('');
 
 
 	const redirect = () => {
+
 		if (didRedirect) {
       return <Redirect to="/applist"></Redirect>;
 		}
@@ -188,6 +223,7 @@ const[signInBtnText,setSignInBtnText] = useState('');
        <AppBar>
                 <img alt="" src={logo} style={{marginLeft:'48%'}} width="40" height="40"></img>
             </AppBar>
+
         <Container component="main" maxWidth="xs" style={{ background: "transparent" }}>
           <CssBaseline />
           <div className={classes.paper}>
@@ -199,7 +235,7 @@ const[signInBtnText,setSignInBtnText] = useState('');
                 {signText}
         </Typography>
               <form className={classes.form} noValidate>
-              {/* <div> */}
+            
                 {unameDisplay && <TextField
             style={{backgroundColor:'white'}}
            variant="outlined"
@@ -271,10 +307,10 @@ const[signInBtnText,setSignInBtnText] = useState('');
           </Button>
                 </Tooltip>
               </form>
-              {/* </div> */}
+            
             </div>
           </div>
-        </Container>
+        </Container> 
       </>
     )
   }
@@ -316,6 +352,7 @@ const[signInBtnText,setSignInBtnText] = useState('');
         {errorMessage()}
         <br /><br />
         {signUpForm()}
+        {/* {redirect()} */}
       </h1>
        : <h1 style={{marginTop:'5%',color:'white',fontSize:'large'}}>
       {loadingMessage()}

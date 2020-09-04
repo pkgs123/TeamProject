@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import {Link,Redirect} from 'react-router-dom';
+import { isAuthenticated } from './AuthComponent/AuthAPI';
 import {
     Paper, Table,
     TableHead, TableRow, TableCell,
@@ -197,7 +199,14 @@ function DeploymentReport(props) {
            }
     }
     useEffect(() => {
-        props.getDeploymentRecords();
+        if(isAuthenticated()){
+            props.getDeploymentRecords();
+        }
+        else{
+            history.push('/');
+        }
+
+       
     }, [])
     return (
         <div style={body}>

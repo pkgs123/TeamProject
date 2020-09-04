@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Card, CardActions, CardContent, Typography, withStyles } from '@material-ui/core';
+import { isAuthenticated,signout} from './AuthComponent/AuthAPI';
+import history from '../History';
 import { Link } from 'react-router-dom';
 import AppBar from './AppBar';
 import logo from '../Images/jio.png';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 const styles = theme => ({
     Card1: {
         minWidth: '312px',
@@ -73,13 +76,42 @@ class CardListComponent extends Component {
         }
     }
 
+    componentDidMount(){
+        if(isAuthenticated()){
+        //  JSON.parse(localStorage.getItem('token')).user.email
+        //   this.props.signedInUser()
+        }
+        else{
+            history.push('/');
+        }
+    }
+
+    onSignOut = () =>{
+        signout()
+        .then((response)=>{
+               console.log("SignedOut",response);
+               history.push('/');
+        })
+        .catch((error)=>{
+            console.log("signedOutError",error);
+        })
+    }
     render() {
         const { classes } = this.props;
-
         return (
             <>
                 <AppBar>
-                    <img alt="" src={logo} width="30" height="30"></img><h4 style={{ marginLeft: '1%', fontStyle: "normal" }}>OneJio Team Dashboard</h4>
+                    <img alt="" src={logo} width="30" height="30"></img>
+                    <h4 style={{ marginLeft: '1%', fontStyle: "normal" }}>OneJio Team Dashboard</h4>
+                  
+                    <span style={{marginLeft:'59%'}}>
+                        <span>| </span>
+                        <span>{localStorage.getItem('token')!==null && JSON.parse(localStorage.getItem('token')).user.email}</span>
+                        <span> |</span>
+                    </span>
+                       <span style={{marginLeft:'5%'}}>  <ExitToAppIcon style={{fontSize:'medium',marginLeft:'3%'}} onClick={this.onSignOut}></ExitToAppIcon></span>
+                       <span style={{fontSize: 'small',marginLeft: '0%',fontStyle: 'normal'}}>LOGOUT</span>
+                      
                 </AppBar>
                 <Link to='/deployment'>
                     <Card className={classes.Card1}>
