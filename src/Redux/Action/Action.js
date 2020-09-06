@@ -1,6 +1,6 @@
 import {get,post,put,remove} from '../../lib/api';
 import {OneJio_Get_Deployment,OneJio_Post_Deployment,
-    OneJio_Update_Deployment,OneJio_Delete_Deployment} from '../../configConstant/config';
+    OneJio_Update_Deployment,OneJio_Delete_Deployment,OneJio_Download_Report} from '../../configConstant/config';
 
 const getDeploymentRecords = () => {
 
@@ -158,7 +158,26 @@ const deleteDeploymentRecord = (payload)=>{
         })
     }
 }
+
+const downloadReport = ()=>{
+
+    return async (dispatch) =>{
+    let url = OneJio_Download_Report;
+    let response = await get(url);
+    
+    let link = document.createElement('a');
+    link.setAttribute('href', 'data:text/csv;charset=utf-8,' + response); 
+    link.setAttribute('download', 'download.csv');
+    document.body.appendChild(link);
+    link.click();
+    dispatch({
+        type: 'DOWNLOAD_REPORT',
+        payload: response
+    })
+}
+}
+
     export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable,
         deploymentCreateRecords,confirmDialogValue,
         successErrorDialog,updateDeploymentRecord,
-        deleteDeploymentRecord,setSignUpErrorDialog,setSignUpSuccessDialog,shouldAuthenticate}
+        deleteDeploymentRecord,setSignUpErrorDialog,setSignUpSuccessDialog,shouldAuthenticate,downloadReport}

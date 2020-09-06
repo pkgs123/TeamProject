@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardActions, CardContent, Typography, withStyles } from '@material-ui/core';
+import { Card, CardActions, CardContent, Typography, withStyles,Tooltip } from '@material-ui/core';
 import { isAuthenticated,signout} from './AuthComponent/AuthAPI';
 import history from '../History';
 import { Link } from 'react-router-dom';
@@ -104,13 +104,13 @@ class CardListComponent extends Component {
                     <img alt="" src={logo} width="30" height="30"></img>
                     <h4 style={{ marginLeft: '1%', fontStyle: "normal" }}>OneJio Team Dashboard</h4>
                   
-                    <span style={{marginLeft:'59%'}}>
+                    <span style={{marginLeft:'55%'}}>
                         <span>| </span>
-                        <span>{localStorage.getItem('token')!==null && JSON.parse(localStorage.getItem('token')).user.email}</span>
+                        <span style={{color:"#fcfcfc"}}>{localStorage.getItem('token')!==null && JSON.parse(localStorage.getItem('token')).user.email}</span>
                         <span> |</span>
                     </span>
-                       <span style={{marginLeft:'5%'}}>  <ExitToAppIcon style={{fontSize:'medium',marginLeft:'3%'}} onClick={this.onSignOut}></ExitToAppIcon></span>
-                       <span style={{fontSize: 'small',marginLeft: '0%',fontStyle: 'normal'}}>LOGOUT</span>
+                       <span style={{marginLeft:'5%'}}><Tooltip title="Logout"><ExitToAppIcon style={{fontSize:'medium',marginLeft:'228%',cursor:'pointer'}} onClick={this.onSignOut}></ExitToAppIcon></Tooltip></span>
+                       <span style={{fontSize: 'small',marginLeft: '3%',fontStyle: 'normal'}}>LOGOUT</span>
                       
                 </AppBar>
                 <Link to='/deployment'>
@@ -129,7 +129,8 @@ class CardListComponent extends Component {
                     <Card className={classes.Card2}>
                         <CardContent>
                             <Typography className={classes.cardTitle1}>
-                                CodeReview Report
+                                {/* CodeReview Report */}
+                                Azue Pipeline Report
                     </Typography>
                         </CardContent>
                         <CardActions>

@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import {
     getDeploymentRecords, deploymentRowTable, deploymentCreateRecords,
     confirmDialogValue, postNewDeploymentRecords,
-    successErrorDialog, updateDeploymentRecord
+    successErrorDialog, updateDeploymentRecord, downloadReport
 } from '../Redux/Action/Action';
 
 import AppBar from './AppBar';
@@ -34,6 +34,8 @@ import ConfirmationDialog from '../Reusable/ConfirmationBox';
 import SuccessErrorDialog from '../Reusable/SuccessDialog';
 import { indigo } from '@material-ui/core/colors';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+
 const onNavBack = () => {
     history.push('/applist');
 }
@@ -75,6 +77,13 @@ const useStyles = makeStyles((theme) => ({
             width: '20ch',
         },
     },
+    btnColor:{
+        backgroundColor: 'Transparent',
+        backgroundRepeat:'no-repeat',
+        border: 'none',
+        cursor:'pointer',
+        overflow: 'hidden'        
+    }
 
 }))
 
@@ -87,7 +96,7 @@ function DeploymentReport(props) {
     let userName = JSON.parse(localStorage.getItem('token')).user.name.toLowerCase();
     const classes = useStyles();
 
-    const { deploymentResult, getDeploymentRecords } = props;
+    const { deploymentResult, getDeploymentRecords, downloadExcelContent } = props;
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -110,6 +119,8 @@ function DeploymentReport(props) {
     const [natureOfChange, setNatureOfChange] = useState('');
     const [uiArtifact, setUiArtifacts] = useState(0);
     const [apiArtifact, setApiArtifacts] = useState(0);
+    const [data,setData] = useState(deploymentResult);
+    const [query, setQueryText] = useState('');
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -259,10 +270,24 @@ function DeploymentReport(props) {
 
     }, [])
 
-    const onDownloadReport = () =>{
-        
+    const searchData = (option) =>{
+        let queryText=option.target.value;
+        var queryResult=[];
+        deploymentResult.forEach(function(data){
+          debugger;
+        console.log("person ",data);
+      if(data.AppName.indexOf(queryText)!=-1 || queryText === '')
+        queryResult.push(data);
+        console.log("query result ",queryResult);
+         });
+        debugger;
+        console.log('Data',data);
+        console.log('Query',query);
+       setData(queryResult);
+       setQueryText(queryText);
+  
     }
- 
+
     return (
         <div style={body}>
             <AppBar>
@@ -280,16 +305,27 @@ function DeploymentReport(props) {
                             input: classes.inputInput,
                         }}
                         inputProps={{ 'aria-label': 'search' }}
+                        onChange={
+                            option => searchData(option)
+                        }
                     />
                 </span>
+                <Tooltip title="Excel">
                 <span style={{ marginLeft: '3%' }}>
-                    <Tooltip title="download">
-                    <GetAppIcon onClick={{onDownloadReport}}></GetAppIcon>
-                    </Tooltip>
+                        <ReactHTMLTableToExcel
+                            className={classes.btnColor}
+                            table="emp"
+                            filename="ReportExcel"
+                           // sheet="Sheet"
+                            buttonText={<GetAppIcon style={{color:'white'}}/>}
+                        >
+
+                        </ReactHTMLTableToExcel>
                 </span>
+                </Tooltip>
                 <span style={{ marginLeft: '3%' }}>
                     <Tooltip title="Back" placeholder="left-start">
-                        <ArrowBackIcon style={{ marginLeft: '41%', backgroundColor: 'darksalmon' }} onClick={onNavBack} />
+                        <ArrowBackIcon style={{ marginLeft: '41%', backgroundColor: 'darksalmon',cursor:'pointer' }} onClick={onNavBack} />
                     </Tooltip>
                 </span>
 
@@ -297,7 +333,7 @@ function DeploymentReport(props) {
             </AppBar>
             <Paper>
                 <TableContainer style={{ zoom: '75%', marginTop: '5%' }}>
-                    <Table size="small" aria-label="a dense table" >
+                    <Table size="small" aria-label="a dense table" id="emp">
                         <TableHead style={{ backgroundColor: 'whitesmoke', fontSize: 'medium' }}>
                             <TableRow>
                                 <TableCell style={{ fontWeight: '800' }}>Sr.No.</TableCell>
@@ -325,7 +361,7 @@ function DeploymentReport(props) {
                         <TableBody>
                             {(Array.isArray(deploymentResult) && deploymentResult.length > 0) &&
 
-                                deploymentResult.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, ind) => {
+                deploymentResult.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, ind) => {
                                     return <>
                                         <TableRow>
                                             <TableCell >
@@ -543,20 +579,22 @@ function DeploymentReport(props) {
             </Paper>
             <ConfirmationDialog />
             <SuccessErrorDialog />
+
+
         </div>
     )
 }
 const mapStateToProps = (state) => {
     return {
         deploymentResult: state.Reducer.deploymentRecords,
-
+        downloadExcelContent: state.Reducer.downloadData
     }
 }
 
 const mapDispatchToProps = {
     getDeploymentRecords, deploymentRowTable, postNewDeploymentRecords,
     deploymentCreateRecords, confirmDialogValue,
-    successErrorDialog, updateDeploymentRecord
+    successErrorDialog, updateDeploymentRecord, downloadReport
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeploymentReport);
