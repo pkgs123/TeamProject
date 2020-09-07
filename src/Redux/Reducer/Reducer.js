@@ -1,8 +1,12 @@
+import { act } from "react-dom/test-utils";
+
 let initialState = {
-    deploymentRecords :[],
+    deploymentRecords : [],
+    deploymentRecordsCopy: [],
     countScm : 0,
     countDsm :0,
     countFiori :0,
+    countMarcom:0,
 
     confirmDialogOptions:{},
     deploymentPostResponse:[],
@@ -16,7 +20,7 @@ let initialState = {
 }
 
 const findDeploymentRecords = (state, action) => {
-    let arr = action.payload, countDSM = 0 ,countSCM = 0 , countFiori = 0 ;
+    let arr = action.payload, countDSM = 0 ,countSCM = 0 , countFiori = 0 ,countMarcom = 0 ;
     for(let i= 0 ;i <arr.length;i++){
         if(arr[i].AppName==="DSM"){
             countDSM++ ;
@@ -27,6 +31,9 @@ const findDeploymentRecords = (state, action) => {
         else if(arr[i].AppName === "FIORI"){
             countFiori++;
         }
+        else if(arr[i].AppName === "MARCOM"){
+            countMarcom++;
+        }
     }
     return {
         ...state,
@@ -34,8 +41,18 @@ const findDeploymentRecords = (state, action) => {
         countScm : countDSM,
         countDsm : countSCM ,
         countFiori : countFiori ,
+        countMarcom : countMarcom
     }
 }
+
+const setDeploymentRecordsCopy = (state,action)=>{
+    return{
+        ...state,
+        deploymentRecordsCopy:action.payload
+    }
+}
+
+
 const setDeploymentRecordValue = (state,action)=>{
     let arr = state.deploymentRecords;
   
@@ -121,6 +138,8 @@ const deployment = (state = initialState, action) => {
     switch (action.type) {
         case 'GET_DEPLOYMENT':
             return findDeploymentRecords(state, action);
+        case 'GET_DEPLOYMENT_COPY':
+            return setDeploymentRecordsCopy(state,action);
         case 'EDIT_DEPLOYMENT_RECORD':
             return setDeploymentRecordValue(state,action);
         case 'CREATE_DEPLOYMENT_RECORD':

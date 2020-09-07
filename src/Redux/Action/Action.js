@@ -2,9 +2,17 @@ import {get,post,put,remove} from '../../lib/api';
 import {OneJio_Get_Deployment,OneJio_Post_Deployment,
     OneJio_Update_Deployment,OneJio_Delete_Deployment,OneJio_Download_Report} from '../../configConstant/config';
 
-const getDeploymentRecords = () => {
+const getDeploymentRecords = (...args) => {
 
+    if(args[0]){
+        return{
+            type: 'GET_DEPLOYMENT',
+            payload: args[0]
+        }
+    }
+    else{
     return async (dispatch) => {
+
         let url = OneJio_Get_Deployment;
         let response = await get(url);
         dispatch({
@@ -13,7 +21,14 @@ const getDeploymentRecords = () => {
         })
     }
 }
+}
 
+const getDeploymentRecordsCopy = (data) =>{
+        return{
+            type:'GET_DEPLOYMENT_COPY',
+            payload:data
+        }
+}
  const postNewDeploymentRecords = (payload) => {
      
      let url = OneJio_Post_Deployment;
@@ -177,7 +192,7 @@ const downloadReport = ()=>{
 }
 }
 
-    export {getDeploymentRecords,postNewDeploymentRecords,deploymentRowTable,
+    export {getDeploymentRecords,getDeploymentRecordsCopy,postNewDeploymentRecords,deploymentRowTable,
         deploymentCreateRecords,confirmDialogValue,
         successErrorDialog,updateDeploymentRecord,
         deleteDeploymentRecord,setSignUpErrorDialog,setSignUpSuccessDialog,shouldAuthenticate,downloadReport}

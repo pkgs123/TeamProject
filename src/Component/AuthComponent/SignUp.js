@@ -100,7 +100,7 @@ const[signInBtnText,setSignInBtnText] = useState('');
 
   useEffect(() => {
     if(isAuthenticated()){
-      //  props.getDeploymentRecords();
+      history.push('/applist');
     }
     else{
         history.push('/');
@@ -150,9 +150,6 @@ const[signInBtnText,setSignInBtnText] = useState('');
       .catch(error => {
         console.log(error)
       })
-    
-    
-     
   }
 
 	const onSignIn = (event) => {

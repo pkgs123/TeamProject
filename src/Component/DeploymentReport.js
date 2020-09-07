@@ -17,7 +17,7 @@ import history from '../History';
 import { connect } from 'react-redux';
 
 import {
-    getDeploymentRecords, deploymentRowTable, deploymentCreateRecords,
+    getDeploymentRecords, getDeploymentRecordsCopy,deploymentRowTable, deploymentCreateRecords,
     confirmDialogValue, postNewDeploymentRecords,
     successErrorDialog, updateDeploymentRecord, downloadReport
 } from '../Redux/Action/Action';
@@ -96,7 +96,9 @@ function DeploymentReport(props) {
     let userName = JSON.parse(localStorage.getItem('token')).user.name.toLowerCase();
     const classes = useStyles();
 
-    const { deploymentResult, getDeploymentRecords, downloadExcelContent } = props;
+    const { deploymentResult, deploymentResultCopy,getDeploymentRecords, downloadExcelContent } = props;
+
+    props.getDeploymentRecordsCopy(deploymentResult);
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -119,9 +121,11 @@ function DeploymentReport(props) {
     const [natureOfChange, setNatureOfChange] = useState('');
     const [uiArtifact, setUiArtifacts] = useState(0);
     const [apiArtifact, setApiArtifacts] = useState(0);
-    const [data,setData] = useState(deploymentResult);
-    const [query, setQueryText] = useState('');
 
+    const [data,setData] = useState([]);
+
+    const [query, setQueryText] = useState('');
+    console.log("RealData",data);
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -258,34 +262,34 @@ function DeploymentReport(props) {
             setCreate(!create);
             return
         }
-    }
-    useEffect(() => {
+    } 
+   
+        useEffect( () => {
         if (isAuthenticated()) {
-            props.getDeploymentRecords();
+             props.getDeploymentRecords();
+          
         }
         else {
             history.push('/');
         }
-
-
     }, [])
 
     const searchData = (option) =>{
-        let queryText=option.target.value;
-        var queryResult=[];
-        deploymentResult.forEach(function(data){
-          debugger;
-        console.log("person ",data);
-      if(data.AppName.indexOf(queryText)!=-1 || queryText === '')
-        queryResult.push(data);
-        console.log("query result ",queryResult);
-         });
-        debugger;
-        console.log('Data',data);
-        console.log('Query',query);
-       setData(queryResult);
-       setQueryText(queryText);
-  
+        var queryText=option.target.value;
+        setQueryText(queryText);
+
+        let searchVal = queryText.toLowerCase();
+        let deploymentListData = deploymentResultCopy.filter(item =>{
+            let appName = item.AppName ? item.AppName.toLowerCase() : '';
+            return (appName.toString().indexOf(searchVal) > -1)
+        })
+        if(searchVal !==""){
+            props.getDeploymentRecords(deploymentListData);
+        }
+        else{
+            props.getDeploymentRecords();
+            setQueryText(queryText);
+        }
     }
 
     return (
@@ -574,7 +578,7 @@ function DeploymentReport(props) {
             </Paper>
             <br />
             <Paper style={{ background: "transparent", backgroundColor: 'lightgray' }}>
-                <b style={{ marginLeft: '5%', fontFamily: 'monospace', fontSize: 'xx-large' }}>Graphical Report:</b><br />
+                <b style={{ marginLeft: '5%', fontFamily: 'monospace', fontSize: 'xx-large' }}>Application Count:</b><br />
                 <Graph />
             </Paper>
             <ConfirmationDialog />
@@ -587,12 +591,13 @@ function DeploymentReport(props) {
 const mapStateToProps = (state) => {
     return {
         deploymentResult: state.Reducer.deploymentRecords,
+        deploymentResultCopy: state.Reducer.deploymentRecordsCopy,
         downloadExcelContent: state.Reducer.downloadData
     }
 }
 
 const mapDispatchToProps = {
-    getDeploymentRecords, deploymentRowTable, postNewDeploymentRecords,
+    getDeploymentRecords, getDeploymentRecordsCopy, deploymentRowTable, postNewDeploymentRecords,
     deploymentCreateRecords, confirmDialogValue,
     successErrorDialog, updateDeploymentRecord, downloadReport
 }

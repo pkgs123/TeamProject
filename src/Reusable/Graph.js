@@ -6,7 +6,7 @@ class Graph extends Component {
     constructor(props){
         super(props)
         this.state={
-            labels : ["SCM", "DSM","FIORI"],
+            labels : ["SCM", "DSM","FIORI","MARCOM"],
         }
     }
     render() {
@@ -16,8 +16,8 @@ class Graph extends Component {
                     data ={{
                         labels : this.state.labels,
                         datasets : [{
-                            data : [this.props.countDSM, this.props.countSCM,this.props.countFiori],
-                            backgroundColor :['#ED90B0','#967BD1','#B9F6CC'],
+                            data : [this.props.countDSM, this.props.countSCM,this.props.countFiori,this.props.countMarcom],
+                            backgroundColor :['#ED90B0','#967BD1','#B9F6CC','lightgreen'],
                             
                         }]
                     }}
@@ -40,7 +40,8 @@ const mapStateToProps = (state)=>{
         deploymentResult: state.Reducer.deploymentRecords,
         countDSM : state.Reducer.countDsm,
         countSCM :  state.Reducer.countScm,
-        countFiori : state.Reducer.countFiori
+        countFiori : state.Reducer.countFiori,
+        countMarcom : state.Reducer.countMarcom
     }
 }
 export default connect(mapStateToProps)(Graph);

@@ -6,6 +6,7 @@ import CodReview from './Component/CodeReview';
 import DsmReport from './Component/DsmReport';
 import ScmReport from './Component/ScmReport';
 import MarcomReport from './Component/Marcom';
+import TestReport from './Component/TestReport';
 import signUp from './Component/AuthComponent/SignUp';
 //import signIn from './Component/AuthComponent/SignIn';
 import history from './History';
@@ -29,6 +30,7 @@ return(
    <Route path="/dsmreport" component={DsmReport} exact/>
    <Route path="/screport" component={ScmReport} exact/>
    <Route path="/marcomreport" component={MarcomReport} exact/>
+   <Route path="/testReport" component={TestReport} exact/>
 </HashRouter>
 </>
 

@@ -58,6 +58,16 @@ const styles = theme => ({
         backgroundColor: '#008080',
         borderColor: '#008080'
     },
+    Card6: {
+        minWidth: '312px',
+        minHeight: '121px',
+        display: 'inline-block',
+        marginTop: '1%',
+        //margin: '0 2px',
+        transform: 'scale(0.8)',
+        backgroundColor: '#092756',
+        borderColor: '#092756'
+    },
     cardTitle1: {
         marginTop: '10%',
         marginLeft: '11%',
@@ -137,6 +147,19 @@ class CardListComponent extends Component {
                         </CardActions>
                     </Card>
                 </Link>
+
+                <Link to="/testReport">
+                    <Card className={classes.Card6}>
+                        <CardContent>
+                            <Typography className={classes.cardTitle1}>
+                               Replica/UAT-Test Report
+                    </Typography>
+                        </CardContent>
+                        <CardActions>
+                        </CardActions>
+                    </Card>
+                </Link>
+
                 <Link to="/dsmreport">
                     <Card className={classes.Card3}>
                         <CardContent>
@@ -170,6 +193,8 @@ class CardListComponent extends Component {
                         </CardActions>
                     </Card>
                 </Link>
+
+            
             </>
         )
     }
