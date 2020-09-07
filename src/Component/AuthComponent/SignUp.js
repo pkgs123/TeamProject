@@ -96,8 +96,6 @@ const[signInBtnText,setSignInBtnText] = useState('');
     loading: false,
 		didRedirect: false,
   });
-
-
   useEffect(() => {
     if(isAuthenticated()){
       history.push('/applist');
@@ -105,8 +103,6 @@ const[signInBtnText,setSignInBtnText] = useState('');
     else{
         history.push('/');
     }
-
-   
 }, [])
 
   //const[close,onClose]=useState(true);

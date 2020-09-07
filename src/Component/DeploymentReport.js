@@ -318,7 +318,7 @@ function DeploymentReport(props) {
                 <span style={{ marginLeft: '3%' }}>
                         <ReactHTMLTableToExcel
                             className={classes.btnColor}
-                            table="emp"
+                            table="deploymentID"
                             filename="ReportExcel"
                            // sheet="Sheet"
                             buttonText={<GetAppIcon style={{color:'white'}}/>}
@@ -337,7 +337,7 @@ function DeploymentReport(props) {
             </AppBar>
             <Paper>
                 <TableContainer style={{ zoom: '75%', marginTop: '5%' }}>
-                    <Table size="small" aria-label="a dense table" id="emp">
+                    <Table size="small" aria-label="a dense table" id="deploymentID">
                         <TableHead style={{ backgroundColor: 'whitesmoke', fontSize: 'medium' }}>
                             <TableRow>
                                 <TableCell style={{ fontWeight: '800' }}>Sr.No.</TableCell>

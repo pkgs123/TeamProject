@@ -113,12 +113,15 @@ class CardListComponent extends Component {
                 <AppBar>
                     <img alt="" src={logo} width="30" height="30"></img>
                     <h4 style={{ marginLeft: '1%', fontStyle: "normal" }}>OneJio Team Dashboard</h4>
-                  
-                    <span style={{marginLeft:'55%'}}>
+                    <Tooltip title="UserInfo">
+                    <span style={{marginLeft:'55%',cursor:'pointer'}}>
+                     
                         <span>| </span>
                         <span style={{color:"#fcfcfc"}}>{localStorage.getItem('token')!==null && JSON.parse(localStorage.getItem('token')).user.email}</span>
                         <span> |</span>
+                      
                     </span>
+                    </Tooltip>
                        <span style={{marginLeft:'5%'}}><Tooltip title="Logout"><ExitToAppIcon style={{fontSize:'medium',marginLeft:'228%',cursor:'pointer'}} onClick={this.onSignOut}></ExitToAppIcon></Tooltip></span>
                        <span style={{fontSize: 'small',marginLeft: '3%',fontStyle: 'normal'}}>LOGOUT</span>
                       
