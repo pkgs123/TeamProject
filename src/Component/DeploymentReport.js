@@ -11,6 +11,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
 import CloseIcon from '@material-ui/icons/Close';
+import PublishIcon from '@material-ui/icons/Publish';
+import { Upload } from 'antd';
+import {DropzoneArea,DropzoneDialog} from 'material-ui-dropzone'
+// import {DropzoneDialog} from 'react-dropzone'
+import Dropzone from 'react-dropzone';
+import { ExcelRenderer } from "react-excel-renderer";
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import SaveIcon from '@material-ui/icons/Save';
 import history from '../History';
@@ -126,7 +132,9 @@ function DeploymentReport(props) {
     const [appGroup,setAppGroup] = useState('');
     const [devId,setDevId] = useState('');
     const [data,setData] = useState([]);
-
+    const [errorMessage,setErrorMessage] = useState('');
+    const [open,setOpen] = useState(false);
+    const [files,setFiles] = useState([]);
     const [query, setQueryText] = useState('');
     console.log("RealData",data);
     const handleChangePage = (event, newPage) => {
@@ -218,6 +226,72 @@ function DeploymentReport(props) {
         //  deploymentResult.splice(ind,1);
         setCreate(!create)
     }
+
+    // File Upload
+    const fileHandler = (fileList) => {
+        debugger;
+        console.log("fileList", fileList);
+        let fileObj = fileList[0];
+        if (!fileObj) {
+        setErrorMessage("No file uploaded!");
+          return false;
+        }
+        console.log("fileObj.type:", fileObj.type);
+        if (
+          !(
+            fileObj.type === "application/vnd.ms-excel" ||
+            fileObj.type ===
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          )
+        ) {
+        setErrorMessage("Unknown file format. Only Excel files are uploaded!");
+          return false;
+        }
+        //just pass the fileObj as parameter
+        ExcelRenderer(fileObj, async(err, resp) => {
+          if (err) {
+            console.log(err);
+          } else {
+            let newRows = [];
+            resp.rows.slice(1).map((row, index) => {
+              if (row && row !== "undefined") {
+                newRows.push({
+                "AppName": row[1],
+                "AppGroup":row[2],
+                "Feature": row[3],
+                "FeatureStatus": row[4],
+                "UserStoryId": row[5],
+                "UserStoryStatus": row[6],
+                "TaskId": row[7],
+                "TaskIdStatus": row[8],
+                "Functional": row[9],
+                "Developer": row[10],
+                "overAllStatus": row[11],
+                "ReleaseNumber": row[12],
+                "NatureOfChange": row[13],
+                "UiArtifacts": row[14],
+                "ApiArtifacts": row[15],
+                "DevId":row[16]
+                });
+              }
+            });
+            if (newRows.length === 0) {
+            setErrorMessage("No data found in file!");
+              return false;
+            } else {
+                await props.postNewDeploymentRecords(newRows);
+               // props.deploymentRowTable(ind, false);
+                props.successErrorDialog(true);
+                props.getDeploymentRecords();
+                setErrorMessage(null)
+                setOpen(false);
+                setFiles(newRows);
+            }
+          }
+        });
+        return false;
+      };
+
     const createNewRecord = () => {
 
         let emptyRowObj = {
@@ -329,11 +403,17 @@ function DeploymentReport(props) {
             setQueryText(queryText);
         }
     }
+    const handleOpen =() => {
+        setOpen(true);
+    } 
+   const handleClose = () => {
+    setOpen(false);
+    }
 
     return (
         <div style={body}>
             <AppBar>
-                <img alt="" src={logo} width="30" height="30"></img><h4 style={{ marginLeft: '44%', fontStyle: "normal" }}>{compName}</h4>
+                <img alt="" src={logo} width="30" height="30"></img><h4 style={{ marginLeft: '42%', fontStyle: "normal" }}>{compName}</h4>
 
                 <span className={classes.search} style={{ marginLeft: '13%' }}>
                     {/* <div className={classes.search}> */}
@@ -352,7 +432,20 @@ function DeploymentReport(props) {
                         }
                     />
                 </span>
-                <Tooltip title="Excel">
+                {userName.includes("navdeep") && <Tooltip title="Upload Data">
+                <span >
+              <PublishIcon  className={classes.btnColor} onClick={handleOpen}/>
+              <DropzoneDialog
+                    open={open}
+                    onSave={fileHandler}
+                    showPreviews={true}
+                    maxFileSize={5000000}
+                    onClose={handleClose}
+                />
+        
+                </span>
+                    </Tooltip> }           
+                <Tooltip title="Download Data">
                 <span style={{ marginLeft: '3%' }}>
                         <ReactHTMLTableToExcel
                             className={classes.btnColor}
