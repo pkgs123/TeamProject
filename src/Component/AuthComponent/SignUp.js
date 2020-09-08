@@ -282,7 +282,7 @@ const[signInBtnText,setSignInBtnText] = useState('');
                     style={{ marginTop: '4%' }}
                    onClick={onSignIn}
                   >
-                    Continue
+                    SIGN IN
           </Button>
                 </Tooltip>
                 <br />
