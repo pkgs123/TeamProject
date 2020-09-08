@@ -228,7 +228,6 @@ const[signInBtnText,setSignInBtnText] = useState('');
                 {signText}
         </Typography>
               <form className={classes.form} noValidate>
-            
                 {unameDisplay && <TextField
             style={{backgroundColor:'white'}}
            variant="outlined"

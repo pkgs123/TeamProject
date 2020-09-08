@@ -22,16 +22,16 @@ let initialState = {
 const findDeploymentRecords = (state, action) => {
     let arr = action.payload, countDSM = 0 ,countSCM = 0 , countFiori = 0 ,countMarcom = 0 ;
     for(let i= 0 ;i <arr.length;i++){
-        if(arr[i].AppName==="DSM"){
+        if(arr[i].AppGroup==="DSM"){
             countDSM++ ;
         }
-        else if(arr[i].AppName==="SCM"){
+        else if(arr[i].AppGroup==="SCM"){
             countSCM++ ;
         }
-        else if(arr[i].AppName === "FIORI"){
+        else if(arr[i].AppGroup === "FIORI"){
             countFiori++;
         }
-        else if(arr[i].AppName === "MARCOM"){
+        else if(arr[i].AppGroup === "MARCOM"){
             countMarcom++;
         }
     }

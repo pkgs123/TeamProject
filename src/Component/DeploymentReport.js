@@ -93,6 +93,8 @@ const body = {
 }
 
 function DeploymentReport(props) {
+    const customColumnStyle = { width: 8,padding:'2px 2px 2px 2px',textAlign:'center',fontWeight:800};
+    const tableCellCss = {padding:'2px 2px 2px 2px', textAlign:'center'};
     let userName = JSON.parse(localStorage.getItem('token')).user.name.toLowerCase();
     const classes = useStyles();
 
@@ -121,7 +123,8 @@ function DeploymentReport(props) {
     const [natureOfChange, setNatureOfChange] = useState('');
     const [uiArtifact, setUiArtifacts] = useState(0);
     const [apiArtifact, setApiArtifacts] = useState(0);
-
+    const [appGroup,setAppGroup] = useState('');
+    const [devId,setDevId] = useState('');
     const [data,setData] = useState([]);
 
     const [query, setQueryText] = useState('');
@@ -167,11 +170,11 @@ function DeploymentReport(props) {
     }
     const handleFunctional = (ind, data, option) => {
         debugger;
-        setFunctional(data['Functional'] = option.target.value)
+        setFunctional(data['Functional'] = option.target.value.toUpperCase())
     }
     const handleDeveloper = (ind, data, option) => {
         debugger;
-        setDeveloper(data['Developer'] = option.target.value)
+        setDeveloper(data['Developer'] = option.target.value.toUpperCase())
     }
     const handleoverAllStatus = (ind, data, option) => {
         debugger;
@@ -193,6 +196,14 @@ function DeploymentReport(props) {
         debugger;
         setApiArtifacts(data['ApiArtifacts'] = option.target.value)
     }
+    const handleDevIdChange = (ind,data,option) =>{
+        debugger;
+        setDevId(data['DevId'] = option.target.value.toUpperCase())
+    }
+    const handleAppGroupChange = (ind,data,option) =>{
+        debugger;
+        setAppGroup(data['AppGroup'] = option.target.value.toUpperCase())
+    }
 
     const handleEdit = (ind) => {
         debugger;
@@ -210,9 +221,9 @@ function DeploymentReport(props) {
     const createNewRecord = () => {
 
         let emptyRowObj = {
-            AppName: '', Feature: '', FeatureStatus: '', UserStoryId: null, UserStoryStatus: '', TaskId: null,
+            AppName: '', AppGroup:'',Feature: '', FeatureStatus: '', UserStoryId: null, UserStoryStatus: '', TaskId: null,
             TaskIdStatus: '', Functional: '', Developer: '', overAllStatus: '', ReleaseNumber: null, NatureOfChange: '',
-            UiArtifacts: null, ApiArtifacts: null, edit: true, createIndicator: true
+            UiArtifacts: null, ApiArtifacts: null, DevId:'',edit: true, createIndicator: true
         }
         props.deploymentCreateRecords(emptyRowObj);
 
@@ -222,6 +233,7 @@ function DeploymentReport(props) {
 
         let payload = {
             "AppName": appNameValue,
+            "AppGroup":appGroup,
             "Feature": featureValue,
             "FeatureStatus": featureStatus,
             "UserStoryId": userStoryId,
@@ -234,7 +246,8 @@ function DeploymentReport(props) {
             "ReleaseNumber": releaseNumber,
             "NatureOfChange": natureOfChange,
             "UiArtifacts": uiArtifact,
-            "ApiArtifacts": apiArtifact
+            "ApiArtifacts": apiArtifact,
+            "DevId":devId
         };
         // if(payload.AppName==="" || payload.Feature=== 0 || payload.FeatureStatus==="" || payload.UserStoryId===0 || payload.UserStoryStatus==="" || payload.TaskId===0 || payload.TaskIdStatus==="" || payload.Functional==="" || payload.Developer==="" || payload.overAllStatus==="" || payload.ReleaseNumber==="" || payload.NatureOfChange==="" || payload.UiArtifacts===0 || payload.ApiArtifacts===0){
         //  // props.deploymentRowTable(ind, true);
@@ -247,18 +260,19 @@ function DeploymentReport(props) {
         //Update Functionality
 
         if (deploymentResult[ind].createIndicator === true) {
-            props.postNewDeploymentRecords(payload);
+            await props.postNewDeploymentRecords(payload);
             props.deploymentRowTable(ind, false);
-            // props.getDeploymentRecords();
             props.successErrorDialog(true);
+            props.getDeploymentRecords();
             setCreate(!create);
             return;
         }
 
         if (deploymentResult[ind].edit) {
-            props.updateDeploymentRecord(deploymentResult[ind]);
+            await props.updateDeploymentRecord(deploymentResult[ind]);
             props.deploymentRowTable(ind, false);
             props.successErrorDialog(true);
+            props.getDeploymentRecords();
             setCreate(!create);
             return
         }
@@ -275,14 +289,38 @@ function DeploymentReport(props) {
     }, [])
 
     const searchData = (option) =>{
+       
         var queryText=option.target.value;
         setQueryText(queryText);
 
         let searchVal = queryText.toLowerCase();
         let deploymentListData = deploymentResultCopy.filter(item =>{
             let appName = item.AppName ? item.AppName.toLowerCase() : '';
-            return (appName.toString().indexOf(searchVal) > -1)
+            let appGroup = item.AppGroup ? item.AppGroup.toLowerCase() : '';
+            let devId =   item.DevId ? item.DevId.toLowerCase() : '';
+            let feature = item.Feature ? item.Feature : '';
+            let FeatureStatus = item.FeatureStatus ? item.FeatureStatus.toLowerCase() : '';
+            let UserStoryId = item.UserStoryId ? item.UserStoryId : '';
+            let UserStoryStatus = item.UserStoryStatus ? item.UserStoryStatus.toLowerCase() : '';
+            let taskId = item.TaskId ? item.TaskId : '';
+            let TaskIdStatus = item.TaskIdStatus ? item.TaskIdStatus.toLowerCase() : '';
+            let Functional = item.Functional ? item.Functional.toLowerCase() : '';
+            
+            let Developer = item.Developer ? item.Developer.toLowerCase() : '';
+            
+            let ReleaseNumber = item.ReleaseNumber ? item.ReleaseNumber.toLowerCase() : '';
+            let UiArtifacts = item.UiArtifacts ? item.UiArtifacts : '';
+            let ApiArtifacts = item.ApiArtifacts ? item.ApiArtifacts : '';
+            
+            return ((appName.toString().indexOf(searchVal) > -1) || (feature.toString().indexOf(searchVal) > -1) 
+            ||  (FeatureStatus.toString().indexOf(searchVal) > -1) || (taskId.toString().indexOf(searchVal) > -1) ||
+             (UserStoryId.toString().indexOf(searchVal) > -1) ||  (UserStoryStatus.toString().indexOf(searchVal) > -1) 
+             ||  (TaskIdStatus.toString().indexOf(searchVal) > -1) || (Functional.toString().indexOf(searchVal) > -1)  ||
+             (Developer.toString().indexOf(searchVal) > -1) || (ReleaseNumber.toString().indexOf(searchVal) > -1) || 
+             (UiArtifacts.toString().indexOf(searchVal) > -1) ||  (ApiArtifacts.toString().indexOf(searchVal) > -1) || 
+             (appGroup.toString().indexOf(searchVal) > -1) ||  (devId.toString().indexOf(searchVal) > -1)    )
         })
+
         if(searchVal !==""){
             props.getDeploymentRecords(deploymentListData);
         }
@@ -340,22 +378,24 @@ function DeploymentReport(props) {
                     <Table size="small" aria-label="a dense table" id="deploymentID">
                         <TableHead style={{ backgroundColor: 'whitesmoke', fontSize: 'medium' }}>
                             <TableRow>
-                                <TableCell style={{ fontWeight: '800' }}>Sr.No.</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>Application Name</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>Feature</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>Feature Status</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>UserStory Id</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>UserStory Status</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>TaskId</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>TaskId Status</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>Functional</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>Developer</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>OverAllStatus</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>Release Number</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>Nature of Change</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>UI-Artifacts</TableCell>
-                                <TableCell style={{ fontWeight: '800' }}>API-Artifacts</TableCell>
-                                <TableCell>
+                                <TableCell style={customColumnStyle}>Sr.No.</TableCell>
+                                <TableCell style={customColumnStyle}>App.Name</TableCell>
+                                <TableCell  style={customColumnStyle}>App.Group</TableCell>
+                                <TableCell  style={customColumnStyle}>Feature</TableCell>
+                                <TableCell  style={customColumnStyle}>Feature Status</TableCell>
+                                <TableCell  style={customColumnStyle}>User_Id</TableCell>
+                                <TableCell  style={customColumnStyle}>UserStory Status</TableCell>
+                                <TableCell  style={customColumnStyle}>TaskId</TableCell>
+                                <TableCell  style={customColumnStyle}>Task_Status</TableCell>
+                                <TableCell  style={customColumnStyle}>Functional</TableCell>
+                                <TableCell  style={customColumnStyle}>Developer</TableCell>
+                                <TableCell  style={customColumnStyle}>Final Status</TableCell>
+                                <TableCell  style={customColumnStyle}>Rel.Num</TableCell>
+                                <TableCell  style={customColumnStyle}>Change_Type</TableCell>
+                                <TableCell  style={customColumnStyle}>UI-Artifacts</TableCell>
+                                <TableCell  style={customColumnStyle}>API-Artifacts</TableCell>
+                                <TableCell  style={customColumnStyle}>Dev_Id</TableCell>
+                                <TableCell style={customColumnStyle}>
                                     {userName.includes("navdeep") && <Tooltip title="Create" placement="left-start">
                                         <AddRoundedIcon style={{ fontSize: 'xxx-large', marginLeft: '15%', color: 'white', backgroundColor: 'purple' }} onClick={() => createNewRecord()} />
                                     </Tooltip>}
@@ -367,11 +407,11 @@ function DeploymentReport(props) {
 
                 deploymentResult.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data, ind) => {
                                     return <>
-                                        <TableRow>
-                                            <TableCell >
+                                        <TableRow > 
+                                            <TableCell style={tableCellCss}>
                                                 {(page * rowsPerPage) + (ind + 1)}
                                             </TableCell>
-                                            <TableCell >
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.AppName} onChange={
                                                         option => handleAppNameChange(ind, data, option)
@@ -381,7 +421,19 @@ function DeploymentReport(props) {
                                                         data.AppName
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                                 {/* App Groud Added */}
+                                            <TableCell style={tableCellCss}>
+                                                {
+                                                    data.edit ? <TextField value={data.AppGroup} onChange={
+                                                        option => handleAppGroupChange(ind, data, option)
+                                                    } placeholder="AppGroup">
+                                                    </TextField>
+                                                        :
+                                                        data.AppGroup
+                                                }
+                                            </TableCell>
+                                              {/* End of App Groud Added */}
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.Feature} placeholder="Feature"
                                                         onChange={
@@ -394,7 +446,7 @@ function DeploymentReport(props) {
                                                         data.Feature
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.FeatureStatus} placeholder="FeatureStatus"
                                                         onChange={
@@ -407,7 +459,7 @@ function DeploymentReport(props) {
 
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}> 
                                                 {
                                                     data.edit ? <TextField value={data.UserStoryId} placeholder="UserStoryId"
                                                         onChange={
@@ -419,7 +471,7 @@ function DeploymentReport(props) {
                                                         data.UserStoryId
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.UserStoryStatus} placeholder="UserStoryStatus"
                                                         onChange={
@@ -431,7 +483,7 @@ function DeploymentReport(props) {
                                                         data.UserStoryStatus
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.TaskId} placeholder="TaskId"
                                                         onChange={
@@ -443,7 +495,7 @@ function DeploymentReport(props) {
                                                         data.TaskId
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.TaskIdStatus} placeholder="TaskIdStatus"
                                                         onChange={
@@ -455,7 +507,7 @@ function DeploymentReport(props) {
                                                         data.TaskIdStatus
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.Functional} placeholder="Functional"
                                                         onChange={
@@ -467,7 +519,7 @@ function DeploymentReport(props) {
                                                         data.Functional
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.Developer} placeholder="Developer"
                                                         onChange={
@@ -479,7 +531,7 @@ function DeploymentReport(props) {
                                                         data.Developer
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.overAllStatus} placeholder="overAllStatus"
                                                         onChange={
@@ -491,7 +543,7 @@ function DeploymentReport(props) {
                                                         data.overAllStatus
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.ReleaseNumber} placeholder="ReleaseNumber"
                                                         onChange={
@@ -503,7 +555,7 @@ function DeploymentReport(props) {
                                                         data.ReleaseNumber
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.NatureOfChange} placeholder="NatureOfChange"
                                                         onChange={
@@ -515,7 +567,7 @@ function DeploymentReport(props) {
                                                         data.NatureOfChange
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.UiArtifacts} placeholder="UiArtifacts"
                                                         onChange={
@@ -527,7 +579,7 @@ function DeploymentReport(props) {
                                                         data.UiArtifacts
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.ApiArtifacts} placeholder="ApiArtifacts"
                                                         onChange={
@@ -539,7 +591,21 @@ function DeploymentReport(props) {
                                                         data.ApiArtifacts
                                                 }
                                             </TableCell>
-                                            <TableCell>
+                                            {/* Dev_Id field added */}
+                                            <TableCell style={tableCellCss}>
+                                                {
+                                                    data.edit ? <TextField value={data.DevId} placeholder="DevId"
+                                                        onChange={
+                                                            option => handleDevIdChange(ind, data, option)
+                                                        }
+                                                    >
+                                                    </TextField>
+                                                        :
+                                                        data.DevId
+                                                }
+                                            </TableCell>
+                                             {/*End of Dev_Id field added */}
+                                            <TableCell style={tableCellCss}>
                                                 {userName.includes("navdeep") && <Box display="flex" flexDirection="row">
 
                                                     {!data.edit &&
