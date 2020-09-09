@@ -99,7 +99,7 @@ const body = {
 }
 
 function DeploymentReport(props) {
-    const customColumnStyle = { width: 8,padding:'2px 2px 2px 2px',textAlign:'center',fontWeight:800};
+    const customColumnStyle = {padding:'2px 2px 2px 2px',textAlign:'center',fontWeight:800};
     const tableCellCss = {padding:'2px 2px 2px 2px', textAlign:'center'};
     let userName = JSON.parse(localStorage.getItem('token')).user.name.toLowerCase();
     const classes = useStyles();
@@ -432,7 +432,7 @@ function DeploymentReport(props) {
                         }
                     />
                 </span>
-                {userName.includes("navdeep") && <Tooltip title="Upload Data">
+                {userName.includes("navdeep") && <Tooltip title="Upload Data" >
                 <span >
               <PublishIcon  className={classes.btnColor} onClick={handleOpen}/>
               <DropzoneDialog
@@ -463,17 +463,16 @@ function DeploymentReport(props) {
                         <ArrowBackIcon style={{ marginLeft: '41%', backgroundColor: 'darksalmon',cursor:'pointer' }} onClick={onNavBack} />
                     </Tooltip>
                 </span>
-
-
             </AppBar>
             <Paper>
-                <TableContainer style={{ zoom: '75%', marginTop: '5%' }}>
+                <TableContainer style={{ zoom: '75%', marginTop: '5%',overflowX:'hidden'}}>
                     <Table size="small" aria-label="a dense table" id="deploymentID">
                         <TableHead style={{ backgroundColor: 'whitesmoke', fontSize: 'medium' }}>
                             <TableRow>
                                 <TableCell style={customColumnStyle}>Sr.No.</TableCell>
                                 <TableCell style={customColumnStyle}>App.Name</TableCell>
                                 <TableCell  style={customColumnStyle}>App.Group</TableCell>
+                                <TableCell  style={customColumnStyle}></TableCell>
                                 <TableCell  style={customColumnStyle}>Feature</TableCell>
                                 <TableCell  style={customColumnStyle}>Feature Status</TableCell>
                                 <TableCell  style={customColumnStyle}>User_Id</TableCell>
@@ -526,6 +525,7 @@ function DeploymentReport(props) {
                                                 }
                                             </TableCell>
                                               {/* End of App Groud Added */}
+                                               <TableCell style={tableCellCss}></TableCell>
                                             <TableCell style={tableCellCss}>
                                                 {
                                                     data.edit ? <TextField value={data.Feature} placeholder="Feature"
