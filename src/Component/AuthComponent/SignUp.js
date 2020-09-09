@@ -117,6 +117,7 @@ const[signInBtnText,setSignInBtnText] = useState('');
     setSignInBtnText('');
     event.preventDefault();
     if(name === "" || email === "" || password === ""){
+      setValues({ ...values, email:'',password:'' })
       props.setSignUpSuccessDialog(false);
       setUserNameDisplay(true);
       setSignText('Sign up');
