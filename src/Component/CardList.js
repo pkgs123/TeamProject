@@ -196,7 +196,7 @@ class CardListComponent extends Component {
                         </CardActions>
                     </Card>
                 </Link>
-
+                
             
             </>
         )

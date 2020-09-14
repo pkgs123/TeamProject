@@ -215,6 +215,7 @@ function DeploymentReport(props) {
 
     const handleEdit = (ind) => {
         debugger;
+        props.confirmDialogValue(null, false);
         props.deploymentRowTable(ind, true);
 
         setCreate(false);
